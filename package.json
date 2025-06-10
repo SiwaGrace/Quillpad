@@ -1,0 +1,11 @@
+{
+  "name": "my-app",
+  "scripts": {
+    "client": "node backend/index.js",
+    "server": "yarn --cwd frontend start",
+    "dev": "concurrently \"yarn backend\" \"yarn frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
