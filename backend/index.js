@@ -3,7 +3,10 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const cors = require("cors");
 const connectDB = require("./config/db");
-// const { errorHandler } = require("./middleware/errorMiddleware");
+const { errorHandler } = require("./middleware/errorMiddleware");
+
+// routes
+const journalRoutes = require("./routes/journalRoutes");
 
 // Load env vars
 dotenv.config();
@@ -20,10 +23,10 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 // app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/journals", require("./routes/journalRoutes"));
+app.use("/api/journals", journalRoutes);
 
 // Error handler middleware
-// app.use(errorHandler);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

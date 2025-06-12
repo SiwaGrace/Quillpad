@@ -7,14 +7,8 @@ const {
   updateJournal,
   deleteJournal,
 } = require("../controllers/journalController");
-const { protect } = require("../middleware/authMiddleware");
 
-router.route("/").get(protect, getJournals).post(protect, createJournal);
-
-router
-  .route("/:id")
-  .get(protect, getJournal)
-  .put(protect, updateJournal)
-  .delete(protect, deleteJournal);
+router.route("/").get(getJournals).post(createJournal);
+router.route("/:id").get(getJournal).put(updateJournal).delete(deleteJournal);
 
 module.exports = router;
