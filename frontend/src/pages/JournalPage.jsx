@@ -1,6 +1,17 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { getEntries } from "../features/journalSlice"; // make sure this thunk is defined
 import JournalEntryCard from "../components/JournalEntryCard";
+
 const JournalPage = () => {
+  const dispatch = useDispatch();
+  const { entries, status, error } = useSelector((state) => state.journal);
+
+  useEffect(() => {
+    dispatch(getEntries());
+  }, [dispatch]);
+
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
@@ -12,21 +23,31 @@ const JournalPage = () => {
           New Entry
         </Link>
       </div>
+
+      {status === "loading" && <p>Loading entries...</p>}
+      {error && <p className="text-red-500">Error: {error}</p>}
+
       <div className="space-y-4">
-        <JournalEntryCard
-          id="1"
-          title="First Day of Summer"
-          date="June 21, 2023"
-          excerpt="Today was a wonderful day filled with sunshine and joy..."
-        />
-        <JournalEntryCard
-          id="2"
-          title="Reflections on Work"
-          date="June 18, 2023"
-          excerpt="I've been thinking a lot about my career path recently..."
-        />
+        {entries?.length > 0 ? (
+          entries.map((entry) => (
+            <JournalEntryCard
+              key={entry._id}
+              id={entry._id}
+              title={entry.title}
+              date={new Date(entry.createdAt).toLocaleDateString()}
+              excerpt={
+                entry.content.length > 100
+                  ? entry.content.slice(0, 100) + "..."
+                  : entry.content
+              }
+            />
+          ))
+        ) : (
+          <p>No journal entries yet.</p>
+        )}
       </div>
     </div>
   );
 };
+
 export default JournalPage;
