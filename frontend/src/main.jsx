@@ -13,23 +13,29 @@ import {
 
 import App from "./App.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import RegisterPage from "./pages/RegisterPage.jsx";
+import LoginPage from "./pages/Auth/LoginPage.jsx";
+import RegisterPage from "./pages/Auth/RegisterPage.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
 import NewEntryPage from "./pages/NewEntryPage.jsx";
 import EntryDetailPage from "./pages/EntryDetailPage.jsx";
 import EditEntryPage from "./pages/NewEntryPage.jsx";
+import Dashboard from "./pages/Dashborad.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route index element={<HomePage />} />
-      <Route path="login" element={<LoginPage />} />
-      <Route path="register" element={<RegisterPage />} />
-      <Route path="journal" element={<JournalPage />} />
-      <Route path="journal/new" element={<NewEntryPage />} />
-      <Route path="journal/:id" element={<EntryDetailPage />} />
-      <Route path="journal/:id/edit" element={<EditEntryPage />} />
+    <Route>
+      <Route path="/" element={<App />}>
+        <Route path="home" element={<HomePage />} />
+        <Route path="journal" element={<JournalPage />} />
+        <Route path="journal/new" element={<NewEntryPage />} />
+        <Route path="journal/:id" element={<EntryDetailPage />} />
+        <Route path="journal/:id/edit" element={<EditEntryPage />} />
+      </Route>
+      <Route>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route index element={<Dashboard />} />
+      </Route>
     </Route>
   )
 );

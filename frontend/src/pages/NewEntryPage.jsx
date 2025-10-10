@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { postEntries } from "../features/journalSlice";
+import { postEntries } from "../features/JournalSlice";
 
 const EntryFormPage = ({ isEdit = false }) => {
   const dispatch = useDispatch();
