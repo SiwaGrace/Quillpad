@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { getEntries } from "../features/journalSlice"; // make sure this thunk is defined
-import JournalEntryCard from "../components/JournalEntryCard";
+import { getEntries } from "../features/JournalSlice"; // make sure this thunk is defined
+import JournalEntryCard from "../components/JournalComponents/JournalEntryCard";
 
 const JournalPage = () => {
   const dispatch = useDispatch();

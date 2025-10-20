@@ -9,7 +9,7 @@ const Navigation = () => {
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold text-indigo-600">
+        <Link to="/home" className="text-xl font-bold text-indigo-600">
           Quillpad
         </Link>
         <div className="flex space-x-4">

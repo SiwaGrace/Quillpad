@@ -16,9 +16,9 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/Auth/LoginPage.jsx";
 import RegisterPage from "./pages/Auth/RegisterPage.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
-import NewEntryPage from "./pages/NewEntryPage.jsx";
-import EntryDetailPage from "./pages/EntryDetailPage.jsx";
-import EditEntryPage from "./pages/NewEntryPage.jsx";
+import NewEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
+import EntryDetailPage from "./components/JournalComponents/EntryDetailPage.jsx";
+import EditEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import Dashboard from "./pages/Dashborad.jsx";
 
 const router = createBrowserRouter(

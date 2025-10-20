@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 const JournalEntryCard = ({ id, title, date, excerpt, onDelete }) => {
   const [showModal, setShowModal] = useState(false);
