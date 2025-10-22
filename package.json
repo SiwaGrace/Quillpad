@@ -1,8 +1,8 @@
 {
   "name": "my-app",
   "scripts": {
-    "client": "cd backend && yarn dev ",
-    "server": "cd backend && yarn start",
+    "client": "cd frontend && yarn dev ",
+    "server": "cd backend && yarn dev",
     "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "devDependencies": {
