@@ -25,7 +25,7 @@ const Navigation = () => {
           </Link>
 
           <Link
-            to="/logout"
+            to="/home"
             className={`font-bold px-2 py-1 ${
               isActive("/logout")
                 ? "border-b-2 border-indigo-600 text-indigo-600"
