@@ -1,6 +1,12 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
+
+// Generate JWT
+const generateToken = (id, email) => {
+  return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
 
 // @desc    Register new user
 // @route   POST /api/auth/register
@@ -15,20 +21,36 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   // Create user
   const user = await User.create({
     username,
     email,
-    password,
+    password: hashedPassword,
   });
 
   if (user) {
-    res.status(201).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user._id),
-    });
+    const token = generateToken(user._id, user.email);
+
+    // Set cookie
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: false, // set to true in production
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      })
+      .status(201)
+      .json({
+        message: "User registered successfully",
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+        token,
+      });
   } else {
     res.status(400);
     throw new Error("Invalid user data");
@@ -41,38 +63,66 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Check for user email
+  // Check for user
   const user = await User.findOne({ email });
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
 
-  if (user && (await user.comparePassword(password))) {
-    res.json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user._id),
-    });
-  } else {
+  // Compare password
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
     res.status(401);
     throw new Error("Invalid credentials");
   }
+
+  const token = generateToken(user._id, user.email);
+
+  // Set cookie
+  res
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: false, // change to true in production
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .status(200)
+    .json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      token,
+    });
 });
 
-// @desc    Get user data
+// @desc    Logout user (clear cookie)
+// @route   POST /api/auth/logout
+// @access  Private
+const logoutUser = asyncHandler(async (req, res) => {
+  res
+    .clearCookie("token")
+    .status(200)
+    .json({ message: "Logged out successfully" });
+});
+
+// @desc    Get current user (from cookie)
 // @route   GET /api/auth/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
-  res.status(200).json(req.user);
+  const user = await User.findById(req.user.id).select("-password");
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  res.status(200).json(user);
 });
-
-// Generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
-  });
-};
 
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
   getMe,
 };
