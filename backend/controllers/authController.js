@@ -5,13 +5,18 @@ const asyncHandler = require("express-async-handler");
 
 // Generate JWT
 const generateToken = (id, email) => {
-  return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const secret = process.env.JWT_SECRET;
+  if (!secret)
+    throw new Error("JWT_SECRET is missing from environment variables");
+
+  return jwt.sign({ id, email }, secret, { expiresIn: "1h" });
 };
 
 // @desc    Register new user
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
+  //
   const { username, email, password } = req.body;
 
   // Check if user exists
@@ -21,14 +26,15 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  // // Hash password
+  // const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create user
   const user = await User.create({
     username,
     email,
-    password: hashedPassword,
+    password,
+    // : hashedPassword,
   });
 
   if (user) {
@@ -89,11 +95,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .json({
       message: "Login successful",
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-      },
+      user: user,
       token,
     });
 });
@@ -117,7 +119,14 @@ const getMe = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-  res.status(200).json(user);
+  res.status(200).json({
+    message: "user details",
+    user: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  });
 });
 
 module.exports = {

@@ -1,13 +1,18 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000/api/auth";
 
 export const loginUser = async (credentials) => {
-  return await axios.post(`${API_URL}/auth/login`, credentials);
+  return await axios.post(`${API_URL}/login`, credentials);
 };
 
 export const registerUser = async (data) => {
-  return await axios.post(`${API_URL}/auth/register`, data);
+  return await axios.post(`${API_URL}/register`, data);
+};
+
+export const getMe = async () => {
+  return await axios.get(`${API_URL}/me`, { withCredentials: true });
 };
 
 // ⚙️ Bonus: apiClient.js (Optional but Powerful)

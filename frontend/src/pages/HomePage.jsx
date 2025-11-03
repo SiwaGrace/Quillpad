@@ -7,7 +7,7 @@ const HomePage = () => {
       <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
         <div className="lg:w-1/2 text-center lg:text-left">
           <h1 className="text-5xl font-bold text-gray-800 mb-6 leading-tight">
-            Capture Your Thoughts <br /> with{" "}
+            Capture Your Thoughts grace <br /> with{" "}
             <span className="text-indigo-600">Clarity</span>.
           </h1>
 
@@ -15,6 +15,7 @@ const HomePage = () => {
             Quillpad is your personal journal, designed to help you reflect,
             grow, and document your life — one entry at a time.
           </p>
+          <p>your email is email@gmail.com</p>
 
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
             <Link
