@@ -9,7 +9,7 @@ const protect = asyncHandler(async (req, res, next) => {
     // 1️⃣ First check cookies (preferred since you set cookies in signIn/signUp)
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
-      console.log("Cookies received:", req.cookies);
+      // console.log("Cookies received:", req.cookies);
     }
     // 2️⃣ Fallback: check Authorization header
     else if (

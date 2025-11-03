@@ -10,6 +10,7 @@ const AuthForm = ({
   footerLink,
   footerLinkText,
   authUser,
+  forgotPasswordTitle,
   token,
   // getMe,
 }) => {
@@ -107,7 +108,32 @@ const AuthForm = ({
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {/* Flex container for Remember Me and Forgot Password */}
+          <div className="flex justify-between items-center mt-2">
+            {/* Remember Me checkbox */}
+            <label className="flex items-center text-gray-700 text-sm">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe || false}
+                onChange={(e) =>
+                  setFormData({ ...formData, rememberMe: e.target.checked })
+                }
+                className="mr-2 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              />
+              Remember Me
+            </label>
 
+            {/* Forgot Password (only on login) */}
+            {buttonText?.toLowerCase() === "login" && (
+              <Link
+                to="/forgotpass"
+                className="text-sm text-indigo-600 font-semibold hover:underline"
+              >
+                Forgot your password?
+              </Link>
+            )}
+          </div>
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:from-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-md cursor-pointer"
