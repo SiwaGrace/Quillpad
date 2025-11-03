@@ -1,10 +1,22 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { logoutUser } from "../api/auth";
 
 const Navigation = () => {
+  const navigate = useNavigate();
   const location = useLocation(); // Get current route path
 
   // Helper to check if link is active
   const isActive = (path) => location.pathname === path;
+
+  const handleLogOut = async () => {
+    try {
+      await logoutUser(); // wait for backend logout to complete
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // optionally show a toast or alert
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm">
@@ -31,6 +43,7 @@ const Navigation = () => {
                 ? "border-b-2 border-indigo-600 text-indigo-600"
                 : "text-gray-700 hover:text-indigo-600"
             }`}
+            onClick={handleLogOut}
           >
             LogOut
           </Link>

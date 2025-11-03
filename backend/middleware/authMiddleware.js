@@ -9,6 +9,7 @@ const protect = asyncHandler(async (req, res, next) => {
     // 1️⃣ First check cookies (preferred since you set cookies in signIn/signUp)
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
+      console.log("Cookies received:", req.cookies);
     }
     // 2️⃣ Fallback: check Authorization header
     else if (
@@ -25,10 +26,10 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 
     // 3️⃣ Verify token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // 4️⃣ Attach user to req object (excluding password)
-    req.user = await userModel.findById(decoded.userId).select("-password");
+    req.user = await userModel.findById(decoded.id).select("-password");
 
     if (!req.user) {
       return res.status(404).json({ message: "User not found" });

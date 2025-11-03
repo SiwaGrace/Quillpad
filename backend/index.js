@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const cors = require("cors");
+
 const connectDB = require("./config/db");
 const { errorHandler } = require("./middleware/errorMiddleware");
 
@@ -12,18 +13,21 @@ const authRoutes = require("./routes/authRoutes");
 // Load env vars
 dotenv.config();
 
-//
-const corsOptions = {
-  origin: "http://localhost:5173", // allow requests from this origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"], // allowed headers
-  credentials: true, // enable set-cookie and Authorization headers
-};
-
 // Connect to database
 connectDB();
-
 const app = express();
+
+// cookie
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+//
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
 
 // Middleware
 app.use(cors(corsOptions));

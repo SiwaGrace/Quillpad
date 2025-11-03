@@ -1,13 +1,30 @@
 import hero from "../assets/hero.png";
 import { Link } from "react-router-dom";
+import { getMe } from "../api/auth";
+import { useEffect, useState } from "react";
 
 const HomePage = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await getMe();
+        console.log(res.data.user);
+        setUser(res.data.user);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, []);
+  if (!user) return <p>Loading...</p>;
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
         <div className="lg:w-1/2 text-center lg:text-left">
           <h1 className="text-5xl font-bold text-gray-800 mb-6 leading-tight">
-            Capture Your Thoughts grace <br /> with{" "}
+            Capture Your Thoughts {user.username} <br /> with{" "}
             <span className="text-indigo-600">Clarity</span>.
           </h1>
 
@@ -15,7 +32,7 @@ const HomePage = () => {
             Quillpad is your personal journal, designed to help you reflect,
             grow, and document your life — one entry at a time.
           </p>
-          <p>your email is email@gmail.com</p>
+          <p>your email is {user.email}</p>
 
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
             <Link

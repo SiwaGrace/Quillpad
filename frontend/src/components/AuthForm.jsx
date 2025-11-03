@@ -10,6 +10,7 @@ const AuthForm = ({
   footerLink,
   footerLinkText,
   authUser,
+  token,
   // getMe,
 }) => {
   const navigate = useNavigate();
@@ -30,12 +31,13 @@ const AuthForm = ({
       const res = await authUser(formData);
       setMessage("Registration/login successful! 🎉");
       console.log("Registered:", res.data);
+      // localStorage.setItem("token", res.data.token);
 
       // ✅ Fetch user details immediately after login/register
       // const userRes = await getMe();
       // console.log("Current user:", userRes.data);
 
-      navigate("/journal/new");
+      navigate("/home");
     } catch (err) {
       setMessage(err.response?.data?.message || "Registration failed");
     }
