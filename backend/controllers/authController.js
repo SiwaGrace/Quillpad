@@ -4,6 +4,9 @@ const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 require("dotenv").config();
 
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+
 // Generate JWT
 const generateToken = (id, email) => {
   const secret = process.env.JWT_SECRET;
@@ -132,9 +135,78 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Send password reset link
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generate reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  await user.save();
+
+  const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Password Reset Request",
+      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`,
+    });
+
+    res.json({ message: "Reset link sent to your email" });
+  } catch (error) {
+    // Rollback token if email fails
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(500).json({ message: "Email could not be sent" });
+  }
+});
+
+// @desc    Reset password
+// @route   POST /api/auth/reset-password/:token
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+  // Update password (hashed automatically in pre-save)
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  res.json({ message: "Password reset successful" });
+});
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
   getMe,
+  forgotPassword,
+  resetPassword,
 };

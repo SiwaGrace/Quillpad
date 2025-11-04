@@ -22,6 +22,7 @@ import NewEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import EntryDetailPage from "./components/JournalComponents/EntryDetailPage.jsx";
 import EditEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import ForgotPassword from "./pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="forgotpass" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     </Route>
   )

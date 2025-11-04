@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+const ResetPassword = () => {
+  const { token } = useParams();
+  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,14 +13,14 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setEmail("");
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/auth/forgot-password",
-        { email }
+        `http://localhost:4000/api/auth/reset-password/${token}`,
+        { password }
       );
       setMessage(res.data.message);
       setError("");
+      setTimeout(() => navigate("/login"), 1000); // redirect to login after 2s
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
       setMessage("");
@@ -45,26 +47,22 @@ const ForgotPassword = () => {
 
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
         <h2 className="text-3xl font-extrabold text-center text-indigo-700 mb-4">
-          Forgot Password
+          Reset Password
         </h2>
-        <p className="text-center text-gray-600 mb-6">
-          Enter your email and we will send a password reset link.
-        </p>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="password"
               className="block text-gray-700 font-medium mb-2"
             >
-              Email Address
+              New Password
             </label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter new password"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
@@ -100,13 +98,13 @@ const ForgotPassword = () => {
                 Loading...
               </>
             ) : (
-              "Send Reset Link"
+              "Reset Password"
             )}
           </button>
         </form>
 
         <p className="mt-6 text-center text-gray-600">
-          Remembered your password?{" "}
+          Back to{" "}
           <Link
             to="/login"
             className="text-indigo-600 font-semibold hover:underline"
@@ -119,4 +117,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
