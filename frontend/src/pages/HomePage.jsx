@@ -2,6 +2,8 @@ import hero from "../assets/hero.png";
 import { Link } from "react-router-dom";
 import { getMe } from "../api/auth";
 import { useEffect, useState } from "react";
+import SplashScreen from "../components/Homepage/SplashScreen";
+import MultiColorSpinner from "../components/Homepage/MultiColorSpinner";
 
 const HomePage = () => {
   const [user, setUser] = useState(null);
@@ -18,7 +20,20 @@ const HomePage = () => {
     };
     fetchUser();
   }, []);
-  if (!user) return <p>Loading...</p>;
+  // Splash screen while loading
+  if (!user)
+    return (
+      // <div className="min-h-screen flex flex-col items-center justify-center bg-indigo-50">
+      //   <div className="flex items-center space-x-3">
+      //     <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      //     <span className="text-xl font-semibold text-indigo-600">
+      //       Loading your journal...
+      //     </span>
+      //   </div>
+      // </div>
+      // <SplashScreen message="Loading your journal..." />
+      <MultiColorSpinner />
+    );
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
