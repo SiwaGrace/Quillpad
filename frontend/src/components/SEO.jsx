@@ -10,7 +10,7 @@ const SEO = () => (
     />
     <meta
       name="keywords"
-      content="journal app, notes, writing, diary, reflection, productivity"
+      content="Vision app, notes, writing, diary, reflection, productivity"
     />
 
     {/* Open Graph / Facebook */}

@@ -1,0 +1,145 @@
+[
+  {
+    "userId": "64f8a2b9c1234abcd567ef01",
+    "title": "Become a Fullstack Developer",
+    "description": "Master frontend and backend development",
+    "category": "Career",
+    "status": "in progress",
+    "subVisions": [
+      {
+        "title": "Learn HTML & CSS",
+        "description": "Complete HTML/CSS basics and projects",
+        "status": "completed",
+        "reflections": [],
+        "progress": 100
+      },
+      {
+        "title": "Learn JavaScript",
+        "description": "Understand JS fundamentals and DOM manipulation",
+        "status": "in progress",
+        "reflections": [],
+        "progress": 60
+      }
+    ],
+    "reflections": [],
+    "progress": 50,
+    "startDate": "2025-01-01T00:00:00Z",
+    "targetDate": "2025-12-31T00:00:00Z"
+  },
+  {
+    "userId": "64f8a2b9c1234abcd567ef02",
+    "title": "Get Fit & Healthy",
+    "description": "Exercise regularly and eat well",
+    "category": "Health",
+    "status": "not started",
+    "subVisions": [
+      {
+        "title": "Start Gym Routine",
+        "description": "3 times a week workouts",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      },
+      {
+        "title": "Eat Balanced Diet",
+        "description": "Plan meals and track nutrition",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      }
+    ],
+    "reflections": [],
+    "progress": 0,
+    "startDate": "2025-06-01T00:00:00Z",
+    "targetDate": "2025-12-01T00:00:00Z"
+  },
+  {
+    "userId": "64f8a2b9c1234abcd567ef03",
+    "title": "Learn Spanish",
+    "description": "Reach intermediate fluency in Spanish",
+    "category": "Personal Growth",
+    "status": "in progress",
+    "subVisions": [
+      {
+        "title": "Complete Duolingo Spanish",
+        "description": "Finish all levels in Duolingo",
+        "status": "in progress",
+        "reflections": [],
+        "progress": 40
+      },
+      {
+        "title": "Practice Speaking Weekly",
+        "description": "Talk with language partners",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      }
+    ],
+    "reflections": [],
+    "progress": 20,
+    "startDate": "2025-03-01T00:00:00Z",
+    "targetDate": "2025-12-31T00:00:00Z"
+  },
+  {
+    "userId": "64f8a2b9c1234abcd567ef04",
+    "title": "Read 50 Books",
+    "description": "Finish reading 50 books this year",
+    "category": "Personal Growth",
+    "status": "in progress",
+    "subVisions": [
+      {
+        "title": "Read 10 Fiction Books",
+        "description": "Fiction novels to improve imagination",
+        "status": "in progress",
+        "reflections": [],
+        "progress": 30
+      },
+      {
+        "title": "Read 10 Non-Fiction Books",
+        "description": "Self-development & tech books",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      }
+    ],
+    "reflections": [],
+    "progress": 15,
+    "startDate": "2025-01-01T00:00:00Z",
+    "targetDate": "2025-12-31T00:00:00Z"
+  },
+
+  {
+    "userId": "64f8a2b9c1234abcd567ef05",
+    "title": "Launch Personal Website",
+    "description": "Build and deploy a personal portfolio website",
+    "category": "Career",
+    "status": "not started",
+    "subVisions": [
+      {
+        "title": "Design UI/UX",
+        "description": "Create wireframes and mockups",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      },
+      {
+        "title": "Develop Frontend",
+        "description": "Implement with React & Tailwind",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      },
+      {
+        "title": "Deploy Website",
+        "description": "Host on Vercel or Netlify",
+        "status": "not started",
+        "reflections": [],
+        "progress": 0
+      }
+    ],
+    "reflections": [],
+    "progress": 0,
+    "startDate": "2025-08-01T00:00:00Z",
+    "targetDate": "2025-10-01T00:00:00Z"
+  }
+]

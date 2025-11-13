@@ -9,6 +9,7 @@ const { errorHandler } = require("./middleware/errorMiddleware");
 // routes
 const journalRoutes = require("./routes/journalRoutes");
 const authRoutes = require("./routes/authRoutes");
+const visionRoutes = require("./routes/visionRoute");
 
 // Load env vars
 dotenv.config();
@@ -37,11 +38,17 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/journals", journalRoutes);
+app.use("/api/visions", visionRoutes);
+
+// it's working?
+app.use("/home", (req, res) => {
+  res.status(200).json("hello");
+});
 
 // Error handler middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`.yellow.bold);
