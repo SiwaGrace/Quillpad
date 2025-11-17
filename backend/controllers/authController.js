@@ -137,7 +137,7 @@ const getMe = asyncHandler(async (req, res) => {
 
 // @desc    Send password reset link
 // @route   POST /api/auth/forgot-password
-// @access  Public
+// @access  Publicd
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
