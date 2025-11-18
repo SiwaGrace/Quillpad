@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { getMe } from "./api/auth";
-import MultiColorSpinner from "./components/Homepage/MultiColorSpinner";
+import MultiColorSpinner from "./components/Dashboard/MultiColorSpinner";
 
 const Root = () => {
   const [user, setUser] = useState(null);

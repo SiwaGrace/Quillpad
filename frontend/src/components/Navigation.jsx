@@ -1,53 +1,47 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { logoutUser } from "../api/auth";
+import { Link, useLocation } from "react-router-dom";
+import UserProfileMenu from "./UserProfileMenu";
 import logo from "../assets/logo/quillpad_logo.png";
 
-const Navigation = () => {
-  const navigate = useNavigate();
-  const location = useLocation(); // Get current route path
+const Navigation = ({ user }) => {
+  const location = useLocation();
 
-  // Helper to check if link is active
-  const isActive = (path) => location.pathname === path;
+  // Your navigation items
+  const navLinks = [
+    { label: "My Journal", path: "/journal" },
+    { label: "My Vision", path: "/vision" },
+    // you can add more links any time
+  ];
 
-  const handleLogOut = async () => {
-    try {
-      await logoutUser(); // wait for backend logout to complete
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-      // optionally show a toast or alert
-    }
-  };
+  // Reusable function for styling links
+  const linkClasses = (path) =>
+    `font-bold py-1 transition ${
+      location.pathname === path
+        ? "border-b-2 border-indigo-600 text-indigo-600"
+        : "text-gray-700 hover:text-indigo-600"
+    }`;
 
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/home" className="">
+        {/* Logo */}
+        <Link to="/home">
           <img src={logo} alt="quillpad logo" className="w-10 p-0" />
         </Link>
-        <div className="flex space-x-4">
-          <Link
-            to="/journal"
-            className={`font-bold px-2 py-1 ${
-              isActive("/journal")
-                ? "border-b-2 border-indigo-600 text-indigo-600"
-                : "text-gray-700 hover:text-indigo-600"
-            }`}
-          >
-            My Journal
-          </Link>
 
-          <Link
-            to="/home"
-            className={`font-bold px-2 py-1 ${
-              isActive("/logout")
-                ? "border-b-2 border-indigo-600 text-indigo-600"
-                : "text-gray-700 hover:text-indigo-600"
-            }`}
-            onClick={handleLogOut}
-          >
-            LogOut
-          </Link>
+        {/* Nav Links */}
+        <div className="flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={linkClasses(link.path)}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* Profile Dropdown */}
+          <UserProfileMenu user={user} />
         </div>
       </div>
     </nav>
