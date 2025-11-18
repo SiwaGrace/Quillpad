@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutUser } from "../api/auth";
+import logo from "../assets/logo/quillpad_logo.png";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const Navigation = () => {
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/home" className="text-xl font-bold text-indigo-600">
-          Quillpad
+        <Link to="/home" className="">
+          <img src={logo} alt="quillpad logo" className="w-10 p-0" />
         </Link>
         <div className="flex space-x-4">
           <Link

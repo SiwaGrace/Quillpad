@@ -2,7 +2,7 @@ import React from "react";
 
 const MultiColorSpinner = ({ size = 16, message = "Loading..." }) => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-indigo-50">
+    <div className="min-h-screen flex flex-col w-full items-center justify-center bg-indigo-50">
       <div className="flex flex-col items-center space-y-4">
         <div
           className="rounded-full animate-spin"

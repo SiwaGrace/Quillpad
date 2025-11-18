@@ -21,7 +21,7 @@ const Root = () => {
     fetchUser();
   }, []);
 
-  if (loading) return <MultiColorSpinner />;
+  // if (loading) return <MultiColorSpinner />;
 
   return <Outlet context={{ user }} />; // pass user down
 };

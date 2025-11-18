@@ -10,7 +10,11 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllVisions).post(createVision);
-router.route("/:id").get(getVisionById).put(updateVision).delete(deleteVision);
+router.route("/").get(protect, getAllVisions).post(protect, createVision);
+router
+  .route("/:id")
+  .get(protect, getVisionById)
+  .put(protect, updateVision)
+  .delete(protect, deleteVision);
 
 module.exports = router;
