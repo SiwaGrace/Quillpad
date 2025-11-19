@@ -10,6 +10,8 @@ const { errorHandler } = require("./middleware/errorMiddleware");
 const journalRoutes = require("./routes/journalRoutes");
 const authRoutes = require("./routes/authRoutes");
 const visionRoutes = require("./routes/visionRoute");
+const quoteRoutes = require("./routes/quotes.js");
+const scriptureRoute = require("./routes/scripture");
 
 // Load env vars
 dotenv.config();
@@ -39,6 +41,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", authRoutes);
 app.use("/api/journals", journalRoutes);
 app.use("/api/visions", visionRoutes);
+app.use("/api", quoteRoutes);
+app.use("/api", scriptureRoute);
 
 // it's working?
 app.use("/home", (req, res) => {

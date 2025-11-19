@@ -118,11 +118,11 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Provider store={store}>
-      <HelmetProvider>
-        <RouterProvider router={router} />
-      </HelmetProvider>
-    </Provider>
-  </StrictMode>
+  // <StrictMode>
+  <Provider store={store}>
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
+  </Provider>
+  // </StrictMode>
 );

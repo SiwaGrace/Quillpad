@@ -1,19 +1,24 @@
-// export const GetDailyPrompt = async () => {
-//   try {
-//     const res = await fetch("https://zenquotes.io/api/random");
-//     if (!res.ok) throw new Error("Network response was not ok");
-//     const data = await res.json();
+export const GetDailyPrompt = async () => {
+  try {
+    // Call YOUR backend instead of ZenQuotes directly
+    const res = await fetch("http://localhost:4000/api/daily-quote");
 
-//     // The API returns an array of quote objects:
-//     // [{ q: "Quote text", a: "Author", ... }]
-//     const { q: prompt, a: author } = data[0];
+    if (!res.ok) {
+      throw new Error("Failed to fetch daily prompt");
+    }
 
-//     return { prompt, author };
-//   } catch (err) {
-//     console.error("Failed to fetch daily prompt:", err);
-//     return {
-//       prompt: "Stay positive — something good is coming.",
-//       author: "Unknown",
-//     };
-//   }
-// };
+    const data = await res.json();
+
+    return {
+      prompt: data.quote,
+      author: data.author,
+    };
+  } catch (error) {
+    console.error("Daily Prompt Error:", error);
+
+    return {
+      prompt,
+      author,
+    };
+  }
+};
