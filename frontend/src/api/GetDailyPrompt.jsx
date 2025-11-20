@@ -1,6 +1,5 @@
 export const GetDailyPrompt = async () => {
   try {
-    // Call YOUR backend instead of ZenQuotes directly
     const res = await fetch("http://localhost:4000/api/daily-quote");
 
     if (!res.ok) {

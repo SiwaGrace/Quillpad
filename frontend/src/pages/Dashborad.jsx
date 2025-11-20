@@ -1,7 +1,7 @@
 import hero from "../assets/hero.png";
 import { Link, useOutletContext } from "react-router-dom";
 import SplashScreen from "../components/Dashboard/SplashScreen";
-import MultiColorSpinner from "../components/Dashboard/MultiColorSpinner";
+
 import logoLeaf from "../assets/logo/quillpad_logo2.png";
 import random from "../assets/logo/quillpad_logo2.png";
 import { useDailyInspiration } from "../components/Dashboard/useDailyInspiration";
@@ -13,7 +13,7 @@ const Dashboard = () => {
   if (!user)
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-50">
-        <MultiColorSpinner />
+        <SplashScreen />
       </div>
     );
 

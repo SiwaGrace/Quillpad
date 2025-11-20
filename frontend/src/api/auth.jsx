@@ -22,7 +22,6 @@ export const logoutUser = async () => {
       {},
       { withCredentials: true }
     );
-    localStorage.setItem("token", response.data.token);
     return response.data;
   } catch (error) {
     console.error("Logout failed:", error);

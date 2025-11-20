@@ -49,7 +49,9 @@ const registerUser = asyncHandler(async (req, res) => {
       .cookie("token", token, {
         httpOnly: true,
         secure: false, // set to true in production,
+        // sameSite: "lax",
         sameSite: "lax",
+
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       })
       .status(201)
@@ -95,6 +97,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie("token", token, {
       httpOnly: true,
       secure: false, // change to true in production
+      // sameSite: "lax",
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     })
@@ -110,10 +113,12 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/logout
 // @access  Private
 const logoutUser = asyncHandler(async (req, res) => {
-  res
-    .clearCookie("token")
-    .status(200)
-    .json({ message: "Logged out successfully" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false, // same as login
+    sameSite: "lax", // must match exactly
+  });
+  res.status(200).json({ message: "Logged out successfully" });
 });
 
 // @desc    Get current user (from cookie)
