@@ -25,7 +25,7 @@ const Navigation = ({ user }) => {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/home">
-          <img src={logo} alt="quillpad logo" className="w-10 p-0" />
+          <img src={logo} alt="quillpad logo" className="w-17 p-0 " />
         </Link>
 
         {/* Nav Links */}
