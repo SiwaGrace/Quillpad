@@ -6,7 +6,7 @@ import authReducer from "../features/authSlices";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    vision: visionReducer,
+    visions: visionReducer,
     journal: journalReducer,
   },
 });

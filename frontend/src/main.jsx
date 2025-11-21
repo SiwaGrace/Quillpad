@@ -48,8 +48,6 @@ const router = createBrowserRouter(
       <Route path="reset-password/:token" element={<ResetPassword />} />
       <Route path="splashscreen" element={<SplashScreen />} />
 
-      <Route path="createvision" element={<CaptureVision />} />
-
       {/* Layout pages (Navbar + Footer) */}
       <Route element={<App />}>
         {/* Protected routes */}
@@ -112,6 +110,15 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <VisionBoard />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="createvision"
+          element={
+            <PrivateRoute>
+              <CaptureVision />
             </PrivateRoute>
           }
         />

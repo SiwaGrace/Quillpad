@@ -1,5 +1,5 @@
 import AuthForm from "../../components/AuthForm";
-import { registerUser } from "../../api/auth";
+import { register } from "../../features/authSlices";
 
 const RegisterPage = () => {
   return (
@@ -9,7 +9,7 @@ const RegisterPage = () => {
       footerText="Already have an account?"
       footerLink="/login"
       footerLinkText="Login"
-      authUser={registerUser}
+      authAction={register}
     />
   );
 };

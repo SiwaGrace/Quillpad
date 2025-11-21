@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addVision } from "../../features/VisionSlice"; // Make sure your slice exports the async thunk
+import { useDispatch, useSelector } from "react-redux";
+import { addVision, fetchVisions } from "../../features/VisionSlice";
 
-// Initial state for the form
 const INITIAL_VISION_STATE = {
   title: "",
   description: "",
@@ -11,10 +10,12 @@ const INITIAL_VISION_STATE = {
   targetDate: "",
 };
 
-function CaptureVision({ currentUserId }) {
+function CaptureVision() {
+  const { user } = useSelector((state) => state.auth);
+  const currentUserId = user?._id;
   const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.visions);
   const [visionData, setVisionData] = useState(INITIAL_VISION_STATE);
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,22 +25,29 @@ function CaptureVision({ currentUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!currentUserId) {
+      alert("You must be logged in to create a vision.");
+      return;
+    }
+
+    if (!visionData.title.trim()) {
+      alert("Vision title is required.");
+      return;
+    }
+
     const finalVisionData = {
       ...visionData,
       userId: currentUserId,
-      status: "not started", // default
+      status: "not started",
     };
 
     try {
-      setLoading(true);
-      await dispatch(addVision(finalVisionData)).unwrap(); // unwrap to catch errors
+      await dispatch(addVision(finalVisionData)).unwrap();
       alert("Vision saved successfully!");
-      setVisionData(INITIAL_VISION_STATE); // Reset form
-    } catch (error) {
-      console.error("Failed to save vision:", error);
-      alert("There was an error saving your vision. Try again.");
-    } finally {
-      setLoading(false);
+      setVisionData(INITIAL_VISION_STATE);
+      dispatch(fetchVisions()); // refresh all visions
+    } catch (err) {
+      alert(err || "Failed to save vision.");
     }
   };
 
@@ -48,67 +56,51 @@ function CaptureVision({ currentUserId }) {
       <h2 className="text-3xl font-extrabold text-teal-800 mb-6 border-b pb-2">
         💡 Capture a New Vision
       </h2>
-      <p className="text-gray-500 mb-8">
-        Define your long-term goal and set a path for your spiritual and
-        personal growth.
-      </p>
-
       <form onSubmit={handleSubmit} className="space-y-6">
         <input type="hidden" name="userId" value={currentUserId || ""} />
 
+        {/* Title */}
         <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Vision Title <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            id="title"
             name="title"
             value={visionData.title}
             onChange={handleChange}
             required
-            placeholder="e.g., Become a Virtuous Leader in My Community"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
           />
         </div>
 
+        {/* Description */}
         <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Description (The "Why")
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Description
           </label>
           <textarea
-            id="description"
             name="description"
             value={visionData.description}
             onChange={handleChange}
             rows="4"
-            placeholder="Describe the significance and impact of achieving this goal."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none"
-          ></textarea>
+            className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+          />
         </div>
 
+        {/* Category & Status */}
         <div className="flex space-x-4">
           <div className="w-1/2">
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
             <select
-              id="category"
               name="category"
               value={visionData.category}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white"
+              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
             >
-              <option value="">Select a Category</option>
+              <option value="">Select Category</option>
               <option value="Spiritual Growth">Spiritual Growth</option>
               <option value="Career">Career</option>
               <option value="Health & Wellness">Health & Wellness</option>
@@ -117,62 +109,52 @@ function CaptureVision({ currentUserId }) {
             </select>
           </div>
           <div className="w-1/2">
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Status (Default)
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
             </label>
-            <div className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-600">
+            <div className="w-full px-4 py-3 bg-gray-100 border rounded-lg text-sm text-gray-600">
               Not started
             </div>
           </div>
         </div>
 
+        {/* Dates */}
         <div className="flex space-x-4">
           <div className="w-1/2">
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Start Date
             </label>
             <input
               type="date"
-              id="startDate"
               name="startDate"
               value={visionData.startDate}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
             />
           </div>
           <div className="w-1/2">
-            <label
-              htmlFor="targetDate"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Target Date
             </label>
             <input
               type="date"
-              id="targetDate"
               name="targetDate"
               value={visionData.targetDate}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
             />
           </div>
         </div>
 
-        <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-150 disabled:opacity-50"
-          >
-            {loading ? "Saving..." : "Save Vision & Plan Sub-Goals"}
-          </button>
-        </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-lg bg-teal-600 text-white text-lg font-medium shadow-md hover:bg-teal-700 disabled:opacity-50"
+        >
+          {loading ? "Saving..." : "Save Vision & Plan Sub-Goals"}
+        </button>
+        {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
       </form>
     </div>
   );

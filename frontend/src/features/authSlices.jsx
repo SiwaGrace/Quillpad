@@ -1,56 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginUser, registerUser, logoutUser, getMe } from "../api/auth";
 
-// Async thunks
-export const fetchMe = createAsyncThunk(
-  "auth/fetchMe",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getMe();
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
-  }
-);
-
+// LOGIN
 export const login = createAsyncThunk(
   "auth/login",
-  async (credentials, { rejectWithValue }) => {
+  async (credentials, thunkAPI) => {
     try {
-      const response = await loginUser(credentials);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      return await loginUser(credentials);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login failed"
+      );
     }
   }
 );
 
+// REGISTER
 export const register = createAsyncThunk(
   "auth/register",
-  async (data, { rejectWithValue }) => {
+  async (userData, thunkAPI) => {
     try {
-      const response = await registerUser(data);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      return await registerUser(userData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Register failed"
+      );
     }
   }
 );
 
-export const logout = createAsyncThunk(
-  "auth/logout",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await logoutUser();
-      return response;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
+// GET LOGGED-IN USER
+export const fetchUser = createAsyncThunk("auth/getMe", async (_, thunkAPI) => {
+  try {
+    return await getMe();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(null); // user not logged in
   }
-);
+});
 
-// Slice
+// LOGOUT
+export const logout = createAsyncThunk("auth/logout", async () => {
+  return await logoutUser();
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -58,55 +50,54 @@ const authSlice = createSlice({
     loading: false,
     error: null,
   },
+
   reducers: {},
+
   extraReducers: (builder) => {
-    // login
     builder
+      // LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user; // Assuming backend returns { user, token }
-        state.error = null;
+        state.user = action.payload.user; // backend returns { user, accessToken }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
 
-    // register
-    builder
+      // REGISTER
       .addCase(register.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
 
-    // logout
-    builder.addCase(logout.fulfilled, (state) => {
-      state.user = null;
-      state.error = null;
-    });
-
-    // fetchMe
-    builder
-      .addCase(fetchMe.pending, (state) => {
+      // GET USER
+      .addCase(fetchUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchMe.fulfilled, (state, action) => {
+      .addCase(fetchUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
       })
-      .addCase(fetchMe.rejected, (state) => {
+      .addCase(fetchUser.rejected, (state) => {
         state.loading = false;
+        state.user = null;
+      })
+
+      // LOGOUT
+      .addCase(logout.fulfilled, (state) => {
         state.user = null;
       });
   },
