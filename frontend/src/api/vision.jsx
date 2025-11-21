@@ -1,29 +1,38 @@
 import axios from "axios";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/visions";
+const BASE_HOST = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
+const api = axios.create({
+  baseURL: `${BASE_HOST}/api/visions`,
+  withCredentials: true,
+});
 
 // Create a new vision
 export const createVision = async (data) => {
-  return await axios.post(API_URL, data, { withCredentials: true });
+  const res = await api.post("/", data);
+  return res.data;
 };
 
 // Get all visions
 export const getAllVisions = async () => {
-  return await axios.get(API_URL, { withCredentials: true });
+  const res = await api.get("/");
+  return res.data;
 };
 
 // Get a single vision by ID
 export const getVisionById = async (id) => {
-  return await axios.get(`${API_URL}/${id}`, { withCredentials: true });
+  const res = await api.get(`/${id}`);
+  return res.data;
 };
 
 // Update a vision by ID
 export const updateVision = async (id, data) => {
-  return await axios.put(`${API_URL}/${id}`, data, { withCredentials: true });
+  const res = await api.put(`/${id}`, data);
+  return res.data;
 };
 
 // Delete a vision by ID
 export const deleteVision = async (id) => {
-  return await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
+  const res = await api.delete(`/${id}`);
+  return res.data;
 };

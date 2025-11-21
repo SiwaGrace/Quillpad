@@ -31,13 +31,11 @@ const AuthForm = ({
     try {
       const res = await authUser(formData);
       setMessage("Registration/login successful! 🎉");
-      console.log("Registered:", res.data);
-      // localStorage.setItem("token", res.data.token);
+      console.log("Registered:", res);
 
       // ✅ Fetch user details immediately after login/register
-      // const userRes = await getMe();
-      // console.log("Current user:", userRes.data);
-
+      const userRes = await getMe();
+      console.log("Current user:", userRes);
       navigate("/home");
     } catch (err) {
       setMessage(err.response?.data?.message || "Registration failed");

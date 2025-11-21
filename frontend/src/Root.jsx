@@ -11,7 +11,7 @@ const Root = () => {
     const fetchUser = async () => {
       try {
         const res = await getMe();
-        setUser(res.data.user);
+        setUser(res.user);
       } catch {
         setUser(null);
       } finally {
@@ -23,7 +23,7 @@ const Root = () => {
 
   if (loading) return <MultiColorSpinner />;
 
-  return <Outlet context={{ user }} />; // pass user down
+  return <Outlet context={{ user, setUser }} />; // pass user down
 };
 
 export default Root;
