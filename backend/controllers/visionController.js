@@ -46,8 +46,9 @@ const createVision = asyncHandler(async (req, res) => {
 // @route   GET /api/visions
 // @access  Private
 const getAllVisions = asyncHandler(async (req, res) => {
-  const visions = await Vision.find();
-  res.json(visions);
+  const userId = req.user._id; // from auth middleware
+  const visions = await Vision.find({ userId }).sort({ createdAt: -1 });
+  res.status(200).json(visions);
 });
 
 // @desc    Get single Vision by ID

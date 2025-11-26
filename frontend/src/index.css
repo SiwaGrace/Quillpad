@@ -1,3 +1,55 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script&family=Inter:wght@400;600&family=Merriweather:wght@400;700&display=swap");
 @import "tailwindcss";
 
 /* #e494a1 */
+/* :root {
+
+} */
+
+/* Body text - clean and readable */
+body {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: #1f2937;
+}
+
+/* Headings - elegant and classic */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5em;
+}
+
+@theme {
+  /* --- Primary Brand Color (Teal) --- */
+  --color-primary-500: oklch(0.63 0.12 165); /* Nearest to #009688 */
+  --color-primary-600: oklch(0.55 0.14 162); /* Nearest to #008080 (Dark) */
+  --color-primary-400: oklch(0.7 0.11 169); /* Nearest to #14B8A6 (Light) */
+
+  /* --- Semantic Status Colors --- */
+  --color-success-500: oklch(0.65 0.17 135); /* Nearest to #4CAF50 (Green) */
+  --color-warning-500: oklch(
+    0.85 0.16 90
+  ); /* Nearest to #FBBF24 (Amber/Yellow) */
+  --color-error-500: oklch(
+    0.58 0.14 25
+  ); /* Nearest to #DC2626 (Red, inferred) */
+
+  /* --- Neutral/Text Colors --- */
+  --color-text-header: oklch(0.3 0 0); /* Nearest to #1A1A1A */
+  --color-text-body: oklch(0.5 0 0); /* Nearest to #4A4A4A */
+  --color-text-muted: oklch(0.65 0 0); /* Nearest to #606060 */
+
+  /* --- Background & Surfaces --- */
+  --color-surface-bg: oklch(0.95 0 0); /* Nearest to #F5F5F5 */
+  --color-border-light: oklch(0.85 0 0); /* Nearest to #E5E7EB */
+
+  /* Note: White (#FFFFFF) is usually just 'white' in Tailwind, but its OKLCH is oklch(1 0 0) */
+}

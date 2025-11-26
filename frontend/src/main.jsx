@@ -34,6 +34,9 @@ import EditEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
 import VisionBoard from "./pages/VisionBoard.jsx";
 import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
+import Visionfirst from "./components/whatever/visionfirst.jsx";
+import VisionDetails from "./pages/VisionDetails.jsx";
+import SubVisionInput from "./components/VisionDetailComponents/SubVisionInput.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
 const router = createBrowserRouter(
@@ -47,6 +50,7 @@ const router = createBrowserRouter(
       <Route path="forgotpass" element={<ForgotPassword />} />
       <Route path="reset-password/:token" element={<ResetPassword />} />
       <Route path="splashscreen" element={<SplashScreen />} />
+      <Route path="vv" element={<Visionfirst />} />
 
       {/* Layout pages (Navbar + Footer) */}
       <Route element={<App />}>
@@ -115,10 +119,28 @@ const router = createBrowserRouter(
         />
 
         <Route
+          path="createsub-vision"
+          element={
+            <PrivateRoute>
+              <SubVisionInput />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
           path="createvision"
           element={
             <PrivateRoute>
               <CaptureVision />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="visions/:id"
+          element={
+            <PrivateRoute>
+              <VisionDetails />
             </PrivateRoute>
           }
         />

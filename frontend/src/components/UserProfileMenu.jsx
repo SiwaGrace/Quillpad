@@ -27,7 +27,7 @@ const UserProfileMenu = ({ user }) => {
         <img
           src={user?.avatar || `${avatar}`}
           alt="profile"
-          className="w-9 h-9 rounded-full border object-cover cursor-pointer"
+          className="w-9 h-9 rounded-full border border-teal-200 object-cover cursor-pointer"
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = { avatar }; // fallback if remote fails
@@ -38,11 +38,13 @@ const UserProfileMenu = ({ user }) => {
       {/* Dropdown */}
       {open && (
         <div
-          className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-20 border"
+          className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-20 border border-sky-100"
           onMouseLeave={() => setOpen(false)}
         >
-          <div className="px-4 py-3 border-b">
-            <p className="text-sm font-semibold">{user?.username || "User"}</p>
+          <div className="px-4 py-3 border-b border-amber-600">
+            <p className="text-sm font-semibold uppercase">
+              {user?.username || "User"}
+            </p>
             <p className="text-xs text-gray-500">{user?.email}</p>
           </div>
 

@@ -70,7 +70,7 @@ function CaptureVision() {
             value={visionData.title}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
           />
         </div>
 
@@ -84,7 +84,7 @@ function CaptureVision() {
             value={visionData.description}
             onChange={handleChange}
             rows="4"
-            className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
           />
         </div>
 
@@ -98,7 +98,7 @@ function CaptureVision() {
               name="category"
               value={visionData.category}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
             >
               <option value="">Select Category</option>
               <option value="Spiritual Growth">Spiritual Growth</option>
@@ -112,7 +112,7 @@ function CaptureVision() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Status
             </label>
-            <div className="w-full px-4 py-3 bg-gray-100 border rounded-lg text-sm text-gray-600">
+            <div className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-600">
               Not started
             </div>
           </div>
@@ -129,7 +129,7 @@ function CaptureVision() {
               name="startDate"
               value={visionData.startDate}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
             />
           </div>
           <div className="w-1/2">
@@ -141,7 +141,7 @@ function CaptureVision() {
               name="targetDate"
               value={visionData.targetDate}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
             />
           </div>
         </div>

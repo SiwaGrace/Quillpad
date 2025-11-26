@@ -7,8 +7,8 @@ const Navigation = ({ user }) => {
 
   // Your navigation items
   const navLinks = [
-    { label: "My Journal", path: "/journal" },
-    { label: "My Vision", path: "/vision" },
+    { label: "My Visions", path: "/vision" },
+    { label: "My Journals", path: "/journal" },
     // you can add more links any time
   ];
 

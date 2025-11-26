@@ -21,7 +21,7 @@ const App = () => {
   // }, []);
   const { user } = useOutletContext();
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-surface-bg flex flex-col">
       <Helmet>
         <title>Quillpad — Write, Edit & Publish Smarter</title>
         <meta
