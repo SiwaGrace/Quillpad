@@ -89,7 +89,9 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        // VM2409:1  GET http://localhost:4000/api/auth/me 401 (Unauthorized) when loggedout
+        state.user = action.payload;
+        // state.user = action.payload.user;
       })
       .addCase(fetchUser.rejected, (state) => {
         state.loading = false;

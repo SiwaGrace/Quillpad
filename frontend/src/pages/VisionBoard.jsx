@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 // NOTE: For the toggle, you would import icons here, e.g.,
 import { MdViewList, MdViewModule } from "react-icons/md";
 import v_image from "../assets/img/long_pcimage.jpg";
+import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
 
 // --- Helper Component for Circular Progress Bar (Unchanged) ---
 const CircularProgressBar = ({ progress }) => {
@@ -74,7 +75,6 @@ const StatusBadge = ({ status }) => {
 };
 
 // --- NEW: Grid View Component ---
-// --- NEW: Grid View Component ---
 const VisionCardGrid = ({ visions }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
     {visions.map((vision) => (
@@ -109,9 +109,12 @@ const VisionCardGrid = ({ visions }) => (
         <div className="p-5 bg-white flex flex-col justify-start">
           {/* Header (Title and Category) */}
           <div className="mb-4">
-            <h3 className="text-xl font-bold text-teal-800 truncate mb-1">
-              {vision.title}
-            </h3>
+            <div className="flex justify-between">
+              <h3 className="text-xl font-bold text-teal-800 truncate mb-1">
+                {vision.title}
+              </h3>
+              <DeleteVision vision={vision} />
+            </div>
             <p className="text-sm text-gray-500">
               {vision.category || "Uncategorized"}
             </p>
@@ -197,7 +200,7 @@ const VisionBoard = () => {
   });
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-8 max-w-7xl mx-auto">
       <header className="flex justify-between items-center mb-10 border-b pb-4">
         <h1 className="text-3xl font-extrabold text-teal-800">
           All Visions ({filteredVisions.length})

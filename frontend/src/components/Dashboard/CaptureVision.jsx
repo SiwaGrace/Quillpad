@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addVision, fetchVisions } from "../../features/VisionSlice";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const INITIAL_VISION_STATE = {
   title: "",
@@ -16,6 +18,7 @@ function CaptureVision() {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.visions);
   const [visionData, setVisionData] = useState(INITIAL_VISION_STATE);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +28,16 @@ function CaptureVision() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("AUTH USER:", user);
+    console.log("USER ID:", currentUserId);
+
     if (!currentUserId) {
-      alert("You must be logged in to create a vision.");
+      toast.error("You must be logged in to create a vision.");
       return;
     }
 
     if (!visionData.title.trim()) {
-      alert("Vision title is required.");
+      toast.error("Vision title is required.");
       return;
     }
 
@@ -43,11 +49,13 @@ function CaptureVision() {
 
     try {
       await dispatch(addVision(finalVisionData)).unwrap();
-      alert("Vision saved successfully!");
+      // alert("Vision saved successfully!");
+      toast.success("Vision saved successfully!");
       setVisionData(INITIAL_VISION_STATE);
       dispatch(fetchVisions()); // refresh all visions
+      setTimeout(() => navigate("/home"), 500);
     } catch (err) {
-      alert(err || "Failed to save vision.");
+      toast.error(err.message || "Failed to save vision.");
     }
   };
 
@@ -150,7 +158,7 @@ function CaptureVision() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-lg bg-teal-600 text-white text-lg font-medium shadow-md hover:bg-teal-700 disabled:opacity-50"
+          className="w-full py-3 rounded-lg bg-teal-600 text-white text-lg font-medium shadow-md hover:bg-teal-700 disabled:opacity-50 cursor-pointer"
         >
           {loading ? "Saving..." : "Save Vision & Plan Sub-Goals"}
         </button>

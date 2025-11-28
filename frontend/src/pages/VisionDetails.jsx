@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchVisions } from "../features/VisionSlice";
 import { Link } from "react-router-dom";
 import logoLeaf from "../assets/logo/quillpad_logo3.png";
+import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
 
 // --- Helper Component: CircularProgressBar (Adapted to new size/color) ---
 const CircularProgressBar = ({ progress, size = 60 }) => {
@@ -170,9 +171,7 @@ const VisionDetails = () => {
             </h1>
           </div>
           {/* Action buttons (Mock) */}
-          <button className="text-sm text-gray-500 hover:text-teal-600 transition">
-            ⋮ Actions
-          </button>
+          <DeleteVision vision={vision} />
         </div>
 
         {/* === MAIN CONTENT GRID === */}
