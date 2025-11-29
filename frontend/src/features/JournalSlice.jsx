@@ -1,54 +1,143 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import {
+  getJournals,
+  addJournal,
+  deleteJournal,
+  updateJournal,
+} from "../api/journalApi";
 
-// Fetch entries
-export const getEntries = createAsyncThunk("journal/getEntries", async () => {
-  const response = await axios.get("http://localhost:5000/api/journals");
-  return response.data;
-});
+// ============================
+// THUNKS
+// ============================
 
-// Post new entry
-export const postEntries = createAsyncThunk(
-  "journal/postEntries",
-  async (entryData, { rejectWithValue }) => {
+// GET all journals
+export const fetchJournals = createAsyncThunk(
+  "journal/fetchJournals",
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/journals",
-        entryData
-      );
-      return response.data;
+      return await getJournals(); // returns res.data
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to post entry"
+        err.response?.data?.message || "Failed to fetch journals"
       );
     }
   }
 );
 
+// GET one journal by ID
+export const fetchJournalById = createAsyncThunk(
+  "journal/fetchJournalById",
+  async (id, { rejectWithValue }) => {
+    try {
+      return await getJournal(id); // returns res.data
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch journal"
+      );
+    }
+  }
+);
+
+// ADD a journal
+export const createJournal = createAsyncThunk(
+  "journal/createJournal",
+  async (journalData, { rejectWithValue }) => {
+    try {
+      return await addJournal(journalData);
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to create journal"
+      );
+    }
+  }
+);
+
+// DELETE a journal
+export const removeJournal = createAsyncThunk(
+  "journal/removeJournal",
+  async (id, { rejectWithValue }) => {
+    try {
+      return await deleteJournal(id);
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete journal"
+      );
+    }
+  }
+);
+
+// UPDATE a journal
+export const editJournal = createAsyncThunk(
+  "journal/editJournal",
+  async ({ id, updatedJournal }, { rejectWithValue }) => {
+    try {
+      return await updateJournal(id, updatedJournal);
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update journal"
+      );
+    }
+  }
+);
+
+// ============================
+// SLICE
+// ============================
 const journalSlice = createSlice({
   name: "journal",
   initialState: {
     entries: [],
-    status: "idle",
+    loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getEntries.pending, (state) => {
+
+      // ===== GET Journals =====
+      .addCase(fetchJournals.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchJournals.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entries = action.payload; // array of journals
+      })
+      .addCase(fetchJournals.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // ===== GET Journal =====
+      .addCase(fetchJournalById.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getEntries.fulfilled, (state, action) => {
+      .addCase(fetchJournalById.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.entries = action.payload;
+        state.currentEntry = action.payload; // store single journal
       })
-      .addCase(getEntries.rejected, (state, action) => {
+      .addCase(fetchJournalById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
+      // ===== CREATE Journal =====
+      .addCase(createJournal.fulfilled, (state, action) => {
+        state.entries.unshift(action.payload); // add new journal to the top
+      })
 
-      .addCase(postEntries.fulfilled, (state, action) => {
-        state.entries.unshift(action.payload); // Add new entry to top
+      // ===== DELETE Journal =====
+      .addCase(removeJournal.fulfilled, (state, action) => {
+        const deletedId = action.meta.arg;
+        state.entries = state.entries.filter((j) => j._id !== deletedId);
+      })
+
+      // ===== UPDATE Journal =====
+      .addCase(editJournal.fulfilled, (state, action) => {
+        const updatedJournal = action.payload;
+        const index = state.entries.findIndex(
+          (j) => j._id === updatedJournal._id
+        );
+        if (index !== -1) {
+          state.entries[index] = updatedJournal;
+        }
       });
   },
 });

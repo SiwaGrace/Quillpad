@@ -13,6 +13,12 @@ export const getJournals = async () => {
   return res.data;
 };
 
+// Get journal by id
+export const getJournal = async (id) => {
+  const res = await api.get(`/${id}`);
+  return res.data;
+};
+
 // Add a new journal
 export const addJournal = async (journal) => {
   const res = await api.post("/", journal);

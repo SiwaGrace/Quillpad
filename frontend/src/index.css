@@ -29,9 +29,9 @@ h6 {
 
 @theme {
   /* --- Primary Brand Color (Teal) --- */
+  --color-primary-400: oklch(0.7 0.11 169); /* Nearest to #14B8A6 (Light) */
   --color-primary-500: oklch(0.63 0.12 165); /* Nearest to #009688 */
   --color-primary-600: oklch(0.55 0.14 162); /* Nearest to #008080 (Dark) */
-  --color-primary-400: oklch(0.7 0.11 169); /* Nearest to #14B8A6 (Light) */
 
   /* --- Semantic Status Colors --- */
   --color-success-500: oklch(0.65 0.17 135); /* Nearest to #4CAF50 (Green) */

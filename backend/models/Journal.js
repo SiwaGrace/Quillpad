@@ -5,12 +5,16 @@ const JournalSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
+      // required: false,
+      default: null,
     },
     visionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vision",
-      required: true,
+      // required: true,
+      // required: false,
+      default: null,
     },
     subVisionId: {
       type: mongoose.Schema.Types.ObjectId,

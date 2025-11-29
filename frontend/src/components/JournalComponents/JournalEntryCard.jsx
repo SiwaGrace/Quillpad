@@ -1,37 +1,71 @@
 import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
-import { useState } from "react";
-import Modal from "../Modal";
+import { useDispatch } from "react-redux";
+import { removeJournal } from "../../features/JournalSlice";
+import {
+  PiTrashLight,
+  PiPencilSimpleLineLight,
+  PiEyeLight,
+} from "react-icons/pi";
 
-const JournalEntryCard = ({ id, title, date, excerpt, onDelete }) => {
-  const [showModal, setShowModal] = useState(false);
-  const openModal = (e) => {
-    e.preventDefault();
-    setShowModal(true);
+const JournalEntryCard = ({ id, title, date, excerpt }) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this entry?")) {
+      dispatch(removeJournal(id));
+    }
   };
 
   return (
-    <>
-      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow relative">
-        {/* Delete icon */}
-        <button
-          onClick={openModal}
-          className="absolute top-4 right-4 text-red-500 hover:text-red-700"
-          aria-label="Delete"
-        >
-          <FaTrash />
-        </button>
+    <div className="border border-primary-400 hover:bg-teal-50 p-4 rounded-lg shadow-sm bg-white">
+      <h3 className="text-xl font-semibold truncate text-primary-500 w-full">
+        {title}
+      </h3>
+      <p className="text-gray-500 text-sm mb-2">{date}</p>
+      {/* line-clamp-3 or truncate */}
+      <p className="text-gray-700  mb-4  line-clamp-3">{excerpt}</p>
 
-        <Link to={`/journal/${id}`}>
-          <h3 className="text-xl font-semibold text-gray-800 mb-1">{title}</h3>
-          <p className="text-sm text-gray-500 mb-3">{date}</p>
-          <p className="text-gray-600">{excerpt}</p>
-        </Link>
+      <div className="flex gap-3">
+        {/* View */}
+        <div className="relative group">
+          <Link
+            to={`/journal/${id}`}
+            className="text-indigo-600 hover:text-indigo-700"
+          >
+            <PiEyeLight size={20} />
+          </Link>
+          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            View
+          </span>
+        </div>
+
+        {/* Edit */}
+        <div className="relative group">
+          <Link
+            to={`/journal/${id}/edit`}
+            className="text-green-600 hover:text-green-700"
+          >
+            <PiPencilSimpleLineLight size={20} />
+          </Link>
+          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            Edit
+          </span>
+        </div>
+
+        {/* Delete */}
+        <div className="relative group">
+          <button
+            onClick={handleDelete}
+            className="text-red-600 hover:text-red-700 transition-colors duration-150 cursor-pointer"
+          >
+            <PiTrashLight size={20} />
+          </button>
+          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            Delete
+          </span>
+        </div>
       </div>
-
-      {/* Modal */}
-      {showModal && <Modal setShowModal={setShowModal} onDelete={onDelete} />}
-    </>
+    </div>
   );
 };
 

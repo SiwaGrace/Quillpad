@@ -31,7 +31,7 @@ import About from "./pages/About.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
 import NewEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import EntryDetailPage from "./components/JournalComponents/EntryDetailPage.jsx";
-import EditEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
+import EditEntryPage from "./components/JournalComponents/EditEntryPage.jsx";
 
 import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
 import VisionBoard from "./pages/VisionBoard.jsx";
@@ -39,6 +39,7 @@ import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
 import Visionfirst from "./components/whatever/visionfirst.jsx";
 import VisionDetails from "./pages/VisionDetails.jsx";
 import SubVisionInput from "./components/VisionDetailComponents/SubVisionInput.jsx";
+import SingleJournalPage from "./components/JournalComponents/SingleJournalPage.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
 const router = createBrowserRouter(
@@ -89,6 +90,15 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <NewEntryPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="journal/single"
+          element={
+            <PrivateRoute>
+              <SingleJournalPage />
             </PrivateRoute>
           }
         />
