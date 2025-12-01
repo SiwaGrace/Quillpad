@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getJournals,
+  getJournal,
   addJournal,
   deleteJournal,
   updateJournal,
@@ -89,6 +90,8 @@ const journalSlice = createSlice({
     entries: [],
     loading: false,
     error: null,
+    currentEntry: null, // <<---- ADD THIS
+    status: "idle",
   },
   reducers: {},
   extraReducers: (builder) => {

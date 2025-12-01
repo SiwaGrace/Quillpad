@@ -20,7 +20,7 @@ const SingleJournalPage = () => {
   if (!selectedJournal) return <p>No journal found.</p>;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="bg-red p-6 rounded-lg shadow-sm">
       <h2 className="text-3xl font-bold mb-2">{selectedJournal.title}</h2>
       <p className="text-gray-500 text-sm mb-6">
         {new Date(selectedJournal.createdAt).toLocaleDateString()}

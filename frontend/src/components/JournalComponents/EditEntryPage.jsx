@@ -8,7 +8,7 @@ const EditEntryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { selectedJournal, status } = useSelector((state) => state.journal);
+  const { currentEntry, status } = useSelector((state) => state.journal);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -18,11 +18,11 @@ const EditEntryPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (selectedJournal) {
-      setTitle(selectedJournal.title);
-      setContent(selectedJournal.content);
+    if (currentEntry) {
+      setTitle(currentEntry.title);
+      setContent(currentEntry.content);
     }
-  }, [selectedJournal]);
+  }, [currentEntry]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ const EditEntryPage = () => {
     navigate("/journal");
   };
 
-  if (!selectedJournal) return <p>Loading...</p>;
+  if (!currentEntry) return <p>Loading...</p>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">

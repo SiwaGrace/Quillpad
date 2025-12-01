@@ -94,14 +94,14 @@ const router = createBrowserRouter(
           }
         />
 
-        <Route
+        {/* <Route
           path="journal/single"
           element={
             <PrivateRoute>
               <SingleJournalPage />
             </PrivateRoute>
           }
-        />
+        /> */}
 
         <Route
           path="journal/:id"
