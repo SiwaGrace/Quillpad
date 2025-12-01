@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchVisions } from "../features/VisionSlice";
 import { Link } from "react-router-dom";
-import logoLeaf from "../assets/logo/quillpad_logo3.png";
 import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
+import SubvisonList from "../components/SubVision/SubvisonList";
 
 // --- Helper Component: CircularProgressBar (Adapted to new size/color) ---
 const CircularProgressBar = ({ progress, size = 60 }) => {
@@ -51,38 +51,38 @@ const CircularProgressBar = ({ progress, size = 60 }) => {
 };
 
 // --- Helper Component: SubVisionItem ---
-const SubVisionItem = ({ subVision }) => {
-  const checkStyle =
-    subVision.status === "completed"
-      ? "text-green-500 bg-green-100"
-      : "text-gray-500 bg-gray-100";
+// const SubVisionItem = ({ subVision }) => {
+//   const checkStyle =
+//     subVision.status === "completed"
+//       ? "text-green-500 bg-green-100"
+//       : "text-gray-500 bg-gray-100";
 
-  return (
-    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-teal-400 transition cursor-pointer">
-      <div className="flex items-center space-x-3">
-        {/* Status Circle */}
-        <div
-          className={`h-4 w-4 rounded-full ${checkStyle} flex items-center justify-center`}
-        >
-          {subVision.status === "completed" && (
-            <span className="text-xs">✓</span>
-          )}
-        </div>
-        <div>
-          <h4 className="font-semibold text-gray-800">{subVision.title}</h4>
-        </div>
-      </div>
+//   return (
+//     <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-teal-400 transition cursor-pointer">
+//       <div className="flex items-center space-x-3">
+//         {/* Status Circle */}
+//         <div
+//           className={`h-4 w-4 rounded-full ${checkStyle} flex items-center justify-center`}
+//         >
+//           {subVision.status === "completed" && (
+//             <span className="text-xs">✓</span>
+//           )}
+//         </div>
+//         <div>
+//           <h4 className="font-semibold text-gray-800">{subVision.title}</h4>
+//         </div>
+//       </div>
 
-      {/* Progress */}
-      <div className="text-right text-sm">
-        <p className="font-bold text-teal-600">{subVision.progress || 0}%</p>
-        <p className="text-xs text-gray-500">
-          {subVision.reflections.length} reflections
-        </p>
-      </div>
-    </div>
-  );
-};
+//       {/* Progress */}
+//       <div className="text-right text-sm">
+//         <p className="font-bold text-teal-600">{subVision.progress || 0}%</p>
+//         <p className="text-xs text-gray-500">
+//           {subVision.reflections.length} reflections
+//         </p>
+//       </div>
+//     </div>
+//   );
+// };
 
 // --- Helper Component: Journal Reflection Item (Mock) ---
 const JournalReflectionItem = ({ title, status }) => {
@@ -213,34 +213,12 @@ const VisionDetails = () => {
             </div>
 
             {/* Sub-Visions List */}
-            <div className="pt-6">
-              <div className="flex justify-between">
-                <h2 className="text-xl font-bold text-teal-800 mb-4">
-                  Sub-Visions ({subVisionCount})
-                </h2>
-                {/* Capture Vision */}
-                <Link to="/createsub-vision">
-                  <button
-                    className="text-primary-500 font-semibold flex items-center gap-2 cursor-pointer
-                     hover:text-primary-600 transition"
-                  >
-                    <img src={logoLeaf} alt="logo" className="h-10" />
-                    <p>add sub-vision</p>
-                  </button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white">
-                {vision.subVisions.length > 0 ? (
-                  vision.subVisions.map((sub, index) => (
-                    <SubVisionItem key={index} subVision={sub} />
-                  ))
-                ) : (
-                  <p className="text-gray-500 italic sm:col-span-2">
-                    No sub-visions defined yet.
-                  </p>
-                )}
-              </div>
-            </div>
+
+            <SubvisonList
+              subVisionCount={subVisionCount}
+              vision={vision}
+              // SubVisionItem={SubVisionItem}
+            />
           </div>
 
           {/* --------------------- COLUMN 2: PROGRESS & REFLECTIONS --------------------- */}

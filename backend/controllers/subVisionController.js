@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Vision = require("../models/Vision");
+const SubVision = require("../models/SubVision");
 
 // ---------------------------------------------
 // ADD Sub-Vision
@@ -8,6 +9,7 @@ const Vision = require("../models/Vision");
 const addSubVision = asyncHandler(async (req, res) => {
   const { visionId } = req.params;
   const { title, description, status } = req.body;
+  console.log("visionId:", visionId, "body:", req.body);
 
   const vision = await Vision.findById(visionId);
   if (!vision) {
@@ -15,22 +17,23 @@ const addSubVision = asyncHandler(async (req, res) => {
     throw new Error("Vision not found");
   }
 
-  const newSub = {
+  const newSub = await SubVision.create({
+    visionId,
     title,
     description: description || "",
     status: status || "not started",
     reflections: [],
     progress: 0,
-  };
+  });
 
-  vision.subVisions.push(newSub);
+  vision.subVisions.push(newSub._id);
   await vision.save();
 
-  res.status(201).json(vision);
+  res.status(201).json(newSub);
 });
 
 // ---------------------------------------------
-// GET all Sub-VISIONS
+// GET all Sub-VISIONS for a Vision
 // GET /api/visions/:visionId/subvisions
 // ---------------------------------------------
 const getAllSubVisions = asyncHandler(async (req, res) => {
@@ -42,7 +45,8 @@ const getAllSubVisions = asyncHandler(async (req, res) => {
     throw new Error("Vision not found");
   }
 
-  res.json(vision.subVisions);
+  const subvisions = await SubVision.find({ visionId });
+  res.json(subvisions);
 });
 
 // ---------------------------------------------
@@ -52,13 +56,7 @@ const getAllSubVisions = asyncHandler(async (req, res) => {
 const getSubVisionById = asyncHandler(async (req, res) => {
   const { visionId, subId } = req.params;
 
-  const vision = await Vision.findById(visionId);
-  if (!vision) {
-    res.status(404);
-    throw new Error("Vision not found");
-  }
-
-  const sub = vision.subVisions.id(subId);
+  const sub = await SubVision.findOne({ _id: subId, visionId });
   if (!sub) {
     res.status(404);
     throw new Error("Sub-vision not found");
@@ -73,29 +71,21 @@ const getSubVisionById = asyncHandler(async (req, res) => {
 // ---------------------------------------------
 const updateSubVision = asyncHandler(async (req, res) => {
   const { visionId, subId } = req.params;
+  const { title, description, status, progress } = req.body;
 
-  const vision = await Vision.findById(visionId);
-  if (!vision) {
-    res.status(404);
-    throw new Error("Vision not found");
-  }
-
-  const sub = vision.subVisions.id(subId); // <-- Beautiful Mongoose method
+  const sub = await SubVision.findOne({ _id: subId, visionId });
   if (!sub) {
     res.status(404);
     throw new Error("Sub-vision not found");
   }
-
-  const { title, description, status, progress } = req.body;
 
   sub.title = title ?? sub.title;
   sub.description = description ?? sub.description;
   sub.status = status ?? sub.status;
   sub.progress = progress ?? sub.progress;
 
-  await vision.save();
-
-  res.json(vision);
+  await sub.save();
+  res.json(sub);
 });
 
 // ---------------------------------------------
@@ -105,20 +95,16 @@ const updateSubVision = asyncHandler(async (req, res) => {
 const deleteSubVision = asyncHandler(async (req, res) => {
   const { visionId, subId } = req.params;
 
-  const vision = await Vision.findById(visionId);
-  if (!vision) {
-    res.status(404);
-    throw new Error("Vision not found");
-  }
-
-  const sub = vision.subVisions.id(subId);
+  const sub = await SubVision.findOneAndDelete({ _id: subId, visionId });
   if (!sub) {
     res.status(404);
     throw new Error("Sub-vision not found");
   }
 
-  sub.remove(); // <-- Mongoose method again
-  await vision.save();
+  // remove reference from Vision
+  await Vision.findByIdAndUpdate(visionId, {
+    $pull: { subVisions: sub._id },
+  });
 
   res.json({ message: "Sub-vision deleted", subId });
 });

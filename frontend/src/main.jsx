@@ -40,6 +40,8 @@ import Visionfirst from "./components/whatever/visionfirst.jsx";
 import VisionDetails from "./pages/VisionDetails.jsx";
 import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
 import SingleJournalPage from "./components/JournalComponents/SingleJournalPage.jsx";
+import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
+import SubVisionList from "./components/SubVision/SubvisonList.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
 const router = createBrowserRouter(
@@ -149,10 +151,26 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="createsub-vision"
+          path="visions/:id/subvisions"
+          element={
+            <PrivateRoute>
+              <SubVisionList />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="visions/:id/subvision/create-subvision"
           element={
             <PrivateRoute>
               <SubVisionInput />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="visions/:id/subvision/:subId"
+          element={
+            <PrivateRoute>
+              <SubVisionDetail />
             </PrivateRoute>
           }
         />

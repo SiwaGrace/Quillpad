@@ -1,24 +1,5 @@
 const mongoose = require("mongoose");
 
-// ---- SUBVISIONS FIELD ----
-const subVisionSchema = new mongoose.Schema({
-  title: { type: String, required: true }, // e.g., "Learn Frontend"
-  description: { type: String },
-  status: {
-    type: String,
-    enum: ["not started", "in progress", "completed"],
-    default: "not started",
-  },
-  reflections: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Journal", // connect reflections specific to this sub-vision
-    },
-  ],
-  progress: { type: Number, default: 0 }, // percentage (optional)
-});
-
-// ---- VISIONS FIELD ----
 const visionSchema = new mongoose.Schema(
   {
     userId: {
@@ -28,7 +9,7 @@ const visionSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true, // e.g., "Become the best fullstack developer"
+      required: true,
     },
     description: {
       type: String,
@@ -49,21 +30,23 @@ const visionSchema = new mongoose.Schema(
     ],
     progress: {
       type: Number,
-      default: 0, // auto-calculated from sub-visions later
+      default: 0, // auto-calculated from subvisions later
     },
     startDate: Date,
     targetDate: Date,
-    subVisions: [subVisionSchema], // mini goals
+    subVisions: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "SubVision" }, // reference subvisions
+    ],
   },
   { timestamps: true }
 );
 
-// ---- Virtual field ----
+// Virtual field to count subvisions
 visionSchema.virtual("subVisionCount").get(function () {
   return this.subVisions ? this.subVisions.length : 0;
 });
 
-// Making sure virtuals appear in JSON / objects
+// Ensure virtuals appear in JSON / objects
 visionSchema.set("toJSON", { virtuals: true });
 visionSchema.set("toObject", { virtuals: true });
 

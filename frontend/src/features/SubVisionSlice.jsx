@@ -11,6 +11,20 @@ import {
 // Async Thunks
 // -------------------------------
 
+// Add a new subvision
+export const addSubVision = createAsyncThunk(
+  "subvisions/add",
+  async ({ visionId, data }, thunkAPI) => {
+    try {
+      return await createSubVision(visionId, data);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
 // Fetch all subvisions for a specific vision
 export const fetchSubVisions = createAsyncThunk(
   "subvisions/fetchAll",
@@ -31,20 +45,6 @@ export const fetchSubVisionById = createAsyncThunk(
   async ({ visionId, subId }, thunkAPI) => {
     try {
       return await getSubVisionById(visionId, subId);
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || err.message
-      );
-    }
-  }
-);
-
-// Add a new subvision
-export const addSubVision = createAsyncThunk(
-  "subvisions/add",
-  async ({ visionId, data }, thunkAPI) => {
-    try {
-      return await createSubVision(visionId, data);
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data?.message || err.message
