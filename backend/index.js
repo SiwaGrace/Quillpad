@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoutes");
 const visionRoutes = require("./routes/visionRoute");
 const quoteRoutes = require("./routes/quotes.js");
 const scriptureRoute = require("./routes/scripture");
+const subVisionRoutes = require("./routes/subVisionRoutes.js");
 
 // Load env vars
 dotenv.config();
@@ -39,8 +40,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/journals", journalRoutes);
 app.use("/api/visions", visionRoutes);
+app.use("/api/visions", subVisionRoutes);
+app.use("/api/journals", journalRoutes);
 app.use("/api", quoteRoutes);
 app.use("/api", scriptureRoute);
 

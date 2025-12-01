@@ -38,7 +38,7 @@ import VisionBoard from "./pages/VisionBoard.jsx";
 import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
 import Visionfirst from "./components/whatever/visionfirst.jsx";
 import VisionDetails from "./pages/VisionDetails.jsx";
-import SubVisionInput from "./components/VisionDetailComponents/SubVisionInput.jsx";
+import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
 import SingleJournalPage from "./components/JournalComponents/SingleJournalPage.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
@@ -131,15 +131,6 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="createsub-vision"
-          element={
-            <PrivateRoute>
-              <SubVisionInput />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
           path="createvision"
           element={
             <PrivateRoute>
@@ -153,6 +144,15 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <VisionDetails />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="createsub-vision"
+          element={
+            <PrivateRoute>
+              <SubVisionInput />
             </PrivateRoute>
           }
         />

@@ -1,7 +1,7 @@
 import React from "react";
 
 const SubVisionInput = () => {
-  return <div>SubVisionInput</div>;
+  return <div>SubVisbionInput</div>;
 };
 
 export default SubVisionInput;

@@ -5,7 +5,7 @@ import {
   addJournal,
   deleteJournal,
   updateJournal,
-} from "../api/journalApi";
+} from "../api/journal";
 
 // ============================
 // THUNKS
