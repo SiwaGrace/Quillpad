@@ -39,9 +39,9 @@ import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
 import Visionfirst from "./components/whatever/visionfirst.jsx";
 import VisionDetails from "./pages/VisionDetails.jsx";
 import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
-import SingleJournalPage from "./components/JournalComponents/SingleJournalPage.jsx";
 import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
 import SubVisionList from "./components/SubVision/SubvisonList.jsx";
+import SubVisionEdit from "./components/SubVision/SubVisionEdit.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
 const router = createBrowserRouter(
@@ -59,7 +59,7 @@ const router = createBrowserRouter(
 
       {/* Layout pages (Navbar + Footer) */}
       <Route element={<App />}>
-        {/* Protected routes */}
+        {/* Dashboard & static pages */}
         <Route
           path="home"
           element={
@@ -78,6 +78,7 @@ const router = createBrowserRouter(
           }
         />
 
+        {/* Journal */}
         <Route
           path="journal"
           element={
@@ -96,14 +97,14 @@ const router = createBrowserRouter(
           }
         />
 
-        {/* <Route
+        <Route
           path="journal/single"
           element={
             <PrivateRoute>
-              <SingleJournalPage />
+              <EditEntryPage />
             </PrivateRoute>
           }
-        /> */}
+        />
 
         <Route
           path="journal/:id"
@@ -114,15 +115,7 @@ const router = createBrowserRouter(
           }
         />
 
-        <Route
-          path="journal/:id/edit"
-          element={
-            <PrivateRoute>
-              <EditEntryPage />
-            </PrivateRoute>
-          }
-        />
-
+        {/* Vision */}
         <Route
           path="vision"
           element={
@@ -150,6 +143,7 @@ const router = createBrowserRouter(
           }
         />
 
+        {/* SubVisions */}
         <Route
           path="visions/:id/subvisions"
           element={
@@ -163,6 +157,14 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <SubVisionInput />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="visions/:id/subvision/:subId/edit"
+          element={
+            <PrivateRoute>
+              <SubVisionEdit />
             </PrivateRoute>
           }
         />
