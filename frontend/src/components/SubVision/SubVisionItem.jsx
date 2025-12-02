@@ -10,7 +10,7 @@ const SubVisionItem = ({ subVision }) => {
 
   return (
     <Link
-      to={`/vision/${visionId}/subvision/${subVision._id}`}
+      to={`/visions/${visionId}/subvision/${subVision._id}`}
       className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-teal-400 transition cursor-pointer"
     >
       <div className="flex items-center space-x-3">

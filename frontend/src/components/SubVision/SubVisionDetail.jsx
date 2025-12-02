@@ -8,7 +8,7 @@ const SubVisionDetail = () => {
   const dispatch = useDispatch();
 
   const {
-    current: subVision,
+    selected: subVision,
     loading,
     error,
   } = useSelector((state) => state.subvisions);
@@ -48,7 +48,7 @@ const SubVisionDetail = () => {
       </div>
 
       <Link
-        to={`/vision/${visionId}`}
+        to={`/visions/${visionId}`}
         className="text-teal-600 underline mt-6 block"
       >
         Back to Vision
