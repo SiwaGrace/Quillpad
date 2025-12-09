@@ -7,42 +7,26 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Refresh token when access token expires
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalReq = error.config;
-
-//     if (error.response?.status === 401 && !originalReq._retry) {
-//       originalReq._retry = true;
-//       try {
-//         await api.get("/refresh");
-//         return api(originalReq);
-//       } catch {
-//         return Promise.reject(error);
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
 export const loginUser = async (credentials) => {
   const res = await api.post("/login", credentials);
+  console.log(res.data);
   return res.data;
 };
 
 export const registerUser = async (userData) => {
   const res = await api.post("/register", userData);
+  console.log(res.data);
   return res.data;
 };
 
 export const logoutUser = async () => {
   const res = await api.post("/logout");
+  console.log(res.data);
   return res.data;
 };
 
 export const getMe = async () => {
   const res = await api.get("/me");
+  console.log(res.data);
   return res.data;
 };
