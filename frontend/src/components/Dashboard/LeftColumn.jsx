@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVisions } from "../../features/VisionSlice";
 import random from "../../assets/logo/quillpad_logo2.png";
 
 const LeftColumn = ({ logoLeaf, progressImages, progressPercent }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     items: visions,
     loading,
@@ -20,7 +21,7 @@ const LeftColumn = ({ logoLeaf, progressImages, progressPercent }) => {
     <div className="space-y-6">
       {/* Capture Vision */}
       <div className="bg-white p-6 rounded-xl shadow-sm">
-        <Link to="/createvision">
+        <Link to="/createvision" state={{ from: location.pathname }}>
           <button className="bg-linear-to-b from-sky-300 to-sky-400 text-white font-semibold px-6 py-2 rounded-full shadow hover:opacity-90 transition flex items-center justify-between cursor-pointer">
             <img src={logoLeaf} alt="logo" className="h-10" />
             <p>Capture Vision</p>
@@ -38,25 +39,30 @@ const LeftColumn = ({ logoLeaf, progressImages, progressPercent }) => {
         {!loading && visions.length === 0 && (
           <p className="text-gray-500">No visions recorded yet.</p>
         )}
-
-        {!loading &&
-          visions.map((vision) => (
-            <div key={vision._id} className="flex items-center space-x-4 mb-4">
-              {/* Optional: add a default image or a progress image */}
-              <img
-                src={random}
-                alt={vision.title}
-                className="w-14 h-14 rounded-lg object-cover"
-              />
-              <div>
-                <p className="font-semibold">{vision.title}</p>
-                <p className="text-sm text-gray-500">
-                  {vision.category || "No category"} •{" "}
-                  {new Date(vision.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="h-[200px] overflow-y-auto no-scrollbar scroll-shadow overscroll-contain">
+          {!loading &&
+            visions.map((vision) => (
+              <Link
+                key={vision._id}
+                to={`/visions/${vision._id}`}
+                className="flex items-center mt-2 space-x-4 mb-4"
+              >
+                {/* Optional: add a default image or a progress image */}
+                <img
+                  src={random}
+                  alt={vision.title}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
+                <div>
+                  <p className="font-semibold">{vision.title}</p>
+                  <p className="text-sm text-gray-500">
+                    {vision.category || "No category"} •{" "}
+                    {new Date(vision.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </Link>
+            ))}
+        </div>
       </div>
 
       {/* Vision Board Progress */}

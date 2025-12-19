@@ -47,7 +47,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    message: null,
     loading: false,
+    loginLoading: false,
+    registerLoading: false,
     error: null,
   },
 
@@ -57,29 +60,31 @@ const authSlice = createSlice({
     builder
       // LOGIN
       .addCase(login.pending, (state) => {
-        state.loading = true;
+        state.loginLoading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user; // backend returns { user, accessToken }
+        state.loginLoading = false;
+        state.user = action.payload.user;
+        state.message = action.payload.message;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
+        state.loginLoading = false;
         state.error = action.payload;
       })
 
       // REGISTER
       .addCase(register.pending, (state) => {
-        state.loading = true;
+        state.registerLoading = true;
         state.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.loading = false;
+        state.registerLoading = false;
         state.user = action.payload.user;
+        state.message = action.payload.message;
       })
       .addCase(register.rejected, (state, action) => {
-        state.loading = false;
+        state.registerLoading = false;
         state.error = action.payload;
       })
 
@@ -90,17 +95,19 @@ const authSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.loading = false;
         // VM2409:1  GET http://localhost:4000/api/auth/me 401 (Unauthorized) when loggedout
-        state.user = action.payload;
-        // state.user = action.payload.user;
+        state.user = action.payload?.user || null;
+        state.message = action.payload?.message || null;
       })
       .addCase(fetchUser.rejected, (state) => {
         state.loading = false;
         state.user = null;
+        state.message = null;
       })
 
       // LOGOUT
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.message = null;
       });
   },
 });

@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addVision, fetchVisions } from "../../features/VisionSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const INITIAL_VISION_STATE = {
@@ -14,10 +14,12 @@ const INITIAL_VISION_STATE = {
 
 function CaptureVision() {
   const { user } = useSelector((state) => state.auth);
-  const currentUserId = user?.user?._id;
+  const currentUserId = user?._id;
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.visions);
   const [visionData, setVisionData] = useState(INITIAL_VISION_STATE);
+
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -52,8 +54,8 @@ function CaptureVision() {
       // alert("Vision saved successfully!");
       toast.success("Vision saved successfully!");
       setVisionData(INITIAL_VISION_STATE);
-      dispatch(fetchVisions()); // refresh all visions
-      setTimeout(() => navigate("/home"), 500);
+      dispatch(fetchVisions()); // refresh all visionss
+      setTimeout(() => navigate(location.state?.from || "/home"), 500);
     } catch (err) {
       toast.error(err.message || "Failed to save vision.");
     }

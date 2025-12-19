@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVisions } from "../features/VisionSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 // NOTE: For the toggle, you would import icons here, e.g.,
 import { MdViewList, MdViewModule } from "react-icons/md";
 import v_image from "../assets/img/long_pcimage.jpg";
@@ -147,6 +147,8 @@ const VisionCardGrid = ({ visions }) => (
 // --- Main Component ---
 const VisionBoard = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [filter, setFilter] = useState("all");
   // NEW STATE: Toggle between 'list' (table) and 'grid' (cards)
   const [viewMode, setViewMode] = useState("list");
@@ -205,7 +207,7 @@ const VisionBoard = () => {
         <h1 className="text-3xl font-extrabold text-teal-800">
           All Visions ({filteredVisions.length})
         </h1>
-        <Link to="/createvision">
+        <Link to="/createvision" state={{ from: location.pathname }}>
           <button className="px-6 py-2 bg-teal-600 text-white font-medium rounded-lg shadow-md hover:bg-teal-700 transition cursor-pointer">
             + New Vision
           </button>

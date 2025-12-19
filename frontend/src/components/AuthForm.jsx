@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 const AuthForm = ({
@@ -12,8 +12,14 @@ const AuthForm = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/home";
 
-  const { user, loading, error } = useSelector((state) => state.auth);
+  const { user, loginLoading, registerLoading, error } = useSelector(
+    (state) => state.auth
+  );
+  const isSubmitting =
+    title.toLowerCase() === "login" ? loginLoading : registerLoading;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -42,10 +48,10 @@ const AuthForm = ({
 
   // 🔥 Navigate after successful login/register
   useEffect(() => {
-    if (user && !loading && !error) {
-      navigate("/home");
+    if (user && !isSubmitting && !error) {
+      navigate(from, { replace: true });
     }
-  }, [user, loading, error, navigate]);
+  }, [user, isSubmitting, error, navigate, from]);
 
   return (
     <div className="min-h-screen flex justify-center items-center px-4">
@@ -133,7 +139,7 @@ const AuthForm = ({
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:from-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-md cursor-pointer"
           >
-            {loading ? "Please wait..." : buttonText}
+            {isSubmitting ? "Please wait..." : buttonText}
           </button>
         </form>
 

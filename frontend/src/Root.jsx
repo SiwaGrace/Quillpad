@@ -6,19 +6,17 @@ import MultiColorSpinner from "./components/Dashboard/MultiColorSpinner";
 
 const Root = () => {
   const dispatch = useDispatch();
-  const { user, token, loading } = useSelector((state) => state.auth);
+  const { user, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!user) {
-      setTimeout(() => {
-        dispatch(fetchUser());
-      }, 100);
+    if (!user && !loading) {
+      dispatch(fetchUser());
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, loading]);
 
-  if (loading) return <MultiColorSpinner />;
+  // if (loading) return <MultiColorSpinner />;
 
-  return <Outlet context={{ user }} />; // pass user down
+  return <Outlet context={{ user, loading }} />; // pass user down
 };
 
 export default Root;

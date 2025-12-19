@@ -53,3 +53,24 @@ h6 {
 
   /* Note: White (#FFFFFF) is usually just 'white' in Tailwind, but its OKLCH is oklch(1 0 0) */
 }
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE + Edge */
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-shadow {
+  mask-image: linear-gradient(
+    /* overflow-y */ to bottom,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
