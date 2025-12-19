@@ -5,6 +5,8 @@ import { fetchVisions } from "../features/VisionSlice";
 import { Link } from "react-router-dom";
 import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
 import SubvisonList from "../components/SubVision/SubvisonList";
+import { fetchJournals } from "../features/JournalSlice";
+import JournalReflectionItem from "../components/VisionDetailComponents/JournalReflectionItem";
 
 // --- Helper Component: CircularProgressBar (Adapted to new size/color) ---
 const CircularProgressBar = ({ progress, size = 60 }) => {
@@ -49,7 +51,6 @@ const CircularProgressBar = ({ progress, size = 60 }) => {
     </div>
   );
 };
-
 // --- Helper Component: SubVisionItem ---
 // const SubVisionItem = ({ subVision }) => {
 //   const checkStyle =
@@ -84,24 +85,6 @@ const CircularProgressBar = ({ progress, size = 60 }) => {
 //   );
 // };
 
-// --- Helper Component: Journal Reflection Item (Mock) ---
-const JournalReflectionItem = ({ title, status }) => {
-  return (
-    <Link
-      to={`/journals/${title.replace(/\s/g, "-")}`}
-      className="flex justify-between items-center p-3 hover:bg-teal-50 transition border-b border-gray-300"
-    >
-      <div className="flex items-center space-x-3">
-        <div className="w-6 h-6 bg-gray-200 rounded-full flex-shrink-0"></div>
-        <p className="font-medium text-gray-700 truncate">{title}</p>
-      </div>
-      <span className="text-green-500 text-xs font-semibold">
-        ✓ Seen {status}
-      </span>
-    </Link>
-  );
-};
-
 // ------------------------------------------------------------------------------------------------
 // --- Main Component: VisionDetails ---
 // ------------------------------------------------------------------------------------------------
@@ -114,6 +97,7 @@ const VisionDetails = () => {
     loading,
     error,
   } = useSelector((state) => state.visions);
+  const { entries: journals } = useSelector((state) => state.journal);
   const vision = visions.find((v) => v._id === visionId);
 
   // FIX FOR RELOAD
@@ -121,6 +105,7 @@ const VisionDetails = () => {
     if (visionId && !vision && !loading) {
       dispatch(fetchVisions());
     }
+    dispatch(fetchJournals({ visionId }));
   }, [dispatch, visionId, vision, loading]);
 
   if (loading && !vision) {
@@ -153,6 +138,9 @@ const VisionDetails = () => {
     (sub) => sub.status === "completed"
   ).length;
   const subVisionCount = vision.subVisions.length;
+
+  // Journals associated with this vision
+  const visionJournals = journals.filter((j) => j.visionId?._id === visionId);
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -233,34 +221,33 @@ const VisionDetails = () => {
 
             {/* Journal Reflections */}
             <div className="rounded-lg p-4 bg-gray-50">
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">
-                Journal Reflections on Vision
-              </h3>
-              <div className="space-y-2">
-                {/* Mocking the journal entries for the vision */}
-                <JournalReflectionItem
-                  title="Initial Thoughts & Goals"
-                  status="✔ Seen"
-                />
-                <JournalReflectionItem
-                  title="Overcoming Coding Block"
-                  status="✔ Seen"
-                />
-
-                {vision.reflections.length > 0 &&
-                  vision.reflections.map((refId) => (
-                    // In a real app, you'd fetch the journal title here.
-                    <p key={refId} className="text-sm text-gray-500">
-                      Reflection ID: {refId}
-                    </p>
-                  ))}
-
-                {vision.reflections.length === 0 && (
-                  <p className="text-sm text-gray-500 italic">
-                    No general journal reflections yet.
-                  </p>
-                )}
+              <div className="flex justify-between">
+                <h3 className="text-lg font-semibold text-gray-700 mb-3">
+                  Journal Reflections
+                </h3>
+                <Link
+                  to="/journal/new"
+                  state={{
+                    redirectTo: `/visions/${visionId}`,
+                    visionId,
+                  }}
+                  className=" text-indigo-700 underline rounded-md"
+                >
+                  New Journal
+                </Link>
               </div>
+
+              {visionJournals.length > 0 ? (
+                <div className="space-y-2">
+                  {visionJournals.map((j) => (
+                    <JournalReflectionItem key={j._id} journal={j} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 italic">
+                  No journal reflections yet for this vision.
+                </p>
+              )}
             </div>
 
             {/* Daily Prompt */}

@@ -98,7 +98,7 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="journal/single"
+          path="journal/:id/edit"
           element={
             <PrivateRoute>
               <EditEntryPage />

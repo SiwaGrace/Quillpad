@@ -1,35 +1,84 @@
 const Journal = require("../models/Journal");
 const asyncHandler = require("express-async-handler");
+const Vision = require("../models/Vision");
+const SubVision = require("../models/SubVision");
 
 // @desc    Create new journal
 // @route   POST /api/journals
 // @access  Private
 const createJournal = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const {
+    title,
+    content,
+    visionId,
+    subVisionId,
+    // , mood, insights
+  } = req.body;
 
   if (!title || !content) {
-    throw new Error("Please add all fields");
+    res.status(400);
+    throw new Error("Please add all required fields");
   }
 
   const journal = await Journal.create({
     title,
     content,
-    // user: req.user.id,
+    userId: req.user._id,
+    visionId: visionId || null,
+    subVisionId: subVisionId || null,
+    // mood: mood || null,
+    // insights: insights || null,
   });
+
+  // Add references to Vision or SubVision if they exist
+  try {
+    if (subVisionId) {
+      const subvisionExists = await SubVision.findById(subVisionId);
+      if (subvisionExists) {
+        await SubVision.findByIdAndUpdate(subVisionId, {
+          $push: { reflections: journal._id },
+        });
+      }
+    } else if (visionId) {
+      const visionExists = await Vision.findById(visionId);
+      if (visionExists) {
+        await Vision.findByIdAndUpdate(visionId, {
+          $push: { reflections: journal._id },
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Failed to update reflections:", err.message);
+  }
 
   res.status(201).json(journal);
 });
 
-// @desc    Get all journals for a user
+// @desc    Get journals (by vision, subvision, or all independent journals for user)
 // @route   GET /api/journals
 // @access  Private
 const getJournals = asyncHandler(async (req, res) => {
-  // { user: req.user.id }
-  const journals = await Journal.find().sort("-createdAt");
-  if (journals.length === 0) {
-    res.status(404);
-    throw new Error("No journals found");
+  const { visionId, subVisionId } = req.query;
+
+  // Start with empty filter
+  const filter = { userId: req.user._id }; // Only journals of the logged-in user
+
+  // Filter by vision if provided
+  if (visionId) {
+    filter.visionId = visionId;
   }
+
+  // Filter by subvision if provided
+  if (subVisionId) {
+    filter.subVisionId = subVisionId;
+  }
+
+  // Fetch journals
+  const journals = await Journal.find(filter)
+    .populate("visionId", "title") // optional: get vision title
+    .populate("subVisionId", "title") // optional: get subvision title
+    .sort({ createdAt: -1 });
+
   res.status(200).json(journals);
 });
 

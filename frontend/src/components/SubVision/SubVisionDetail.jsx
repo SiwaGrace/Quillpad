@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { fetchSubVisionById } from "../../features/SubVisionSlice";
+import { fetchJournals } from "../../features/JournalSlice";
 
 const SubVisionDetail = () => {
   const { id: visionId, subId } = useParams();
   const dispatch = useDispatch();
+  const { entries: journals } = useSelector((state) => state.journal);
 
   const {
     selected: subVision,
@@ -15,15 +17,33 @@ const SubVisionDetail = () => {
 
   useEffect(() => {
     dispatch(fetchSubVisionById({ visionId, subId }));
-  }, [visionId, subId]);
+    dispatch(fetchJournals({ subVisionId: subId }));
+  }, [dispatch, visionId, subId]);
 
   if (loading) return <p className="text-center text-teal-600">Loading...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
   if (!subVision) return <p>No details found.</p>;
 
+  const subVisionJournals = journals.filter(
+    (j) => j.subVisionId?._id === subId
+  );
+
   return (
     <div className="max-w-3xl mx-auto bg-white shadow p-6 mt-6 rounded-lg">
-      <h1 className="text-3xl font-bold text-gray-800">{subVision.title}</h1>
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold text-gray-800">{subVision.title}</h1>
+        <Link
+          to="/journal/new"
+          state={{
+            redirectTo: `/visions/${visionId}/subvision/${subId}`,
+            visionId,
+            subVisionId: subId,
+          }}
+          className=" text-indigo-700 underline rounded-md"
+        >
+          New Journal
+        </Link>
+      </div>
 
       <p className="mt-2 text-gray-600">{subVision.description}</p>
 
@@ -38,12 +58,28 @@ const SubVisionDetail = () => {
 
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-gray-700">
-          Reflections ({subVision.reflections?.length || 0})
+          Journal Reflections ({subVisionJournals.length})
         </h2>
         <ul className="list-disc ml-6 text-gray-600">
-          {subVision.reflections.map((r, i) => (
-            <li key={i}>Reflection ID: {r}</li>
-          ))}
+          {subVisionJournals.length > 0 ? (
+            <ul className="space-y-2 mt-2">
+              {subVisionJournals.map((j) => (
+                <li
+                  key={j._id}
+                  className="p-3 bg-gray-50 rounded border hover:bg-teal-50 transition"
+                >
+                  <p className="font-medium text-gray-800">{j.title}</p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(j.createdAt).toLocaleDateString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500 italic mt-2">
+              No journal reflections yet for this sub-vision.
+            </p>
+          )}
         </ul>
       </div>
 

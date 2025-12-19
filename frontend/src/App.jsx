@@ -2,24 +2,8 @@ import { Helmet } from "react-helmet-async";
 import { Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
 
 const App = () => {
-  // const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchMe = async () => {
-  //     try {
-  //       const res = await getMe();
-  //       setUser(res.data.user);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchMe();
-  // }, []);
-  const { user } = useOutletContext();
   return (
     <div className="min-h-screen bg-surface-bg flex flex-col">
       <Helmet>
@@ -60,9 +44,9 @@ const App = () => {
         <meta name="twitter:image" content="/quillpad-preview.png" />
       </Helmet>
 
-      <Navigation user={user} />
+      <Navigation />
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <Outlet context={{ user }} />
+        <Outlet />
       </main>
       <Footer />
     </div>

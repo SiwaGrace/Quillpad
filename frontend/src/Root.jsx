@@ -1,29 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { getMe } from "./api/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "./features/authSlices";
 import MultiColorSpinner from "./components/Dashboard/MultiColorSpinner";
 
 const Root = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { user, token, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMe();
-        setUser(res.user);
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+    if (!user) {
+      setTimeout(() => {
+        dispatch(fetchUser());
+      }, 100);
+    }
+  }, [dispatch, user]);
 
   if (loading) return <MultiColorSpinner />;
 
-  return <Outlet context={{ user, setUser }} />; // pass user down
+  return <Outlet context={{ user }} />; // pass user down
 };
 
 export default Root;

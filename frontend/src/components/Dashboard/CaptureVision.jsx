@@ -14,7 +14,7 @@ const INITIAL_VISION_STATE = {
 
 function CaptureVision() {
   const { user } = useSelector((state) => state.auth);
-  const currentUserId = user?._id;
+  const currentUserId = user?.user?._id;
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.visions);
   const [visionData, setVisionData] = useState(INITIAL_VISION_STATE);

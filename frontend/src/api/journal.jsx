@@ -8,8 +8,8 @@ const api = axios.create({
 });
 
 // Get all journals
-export const getJournals = async () => {
-  const res = await api.get("/");
+export const getJournals = async (params = {}) => {
+  const res = await api.get("/", { params });
   return res.data;
 };
 

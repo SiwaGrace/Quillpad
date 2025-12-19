@@ -1,5 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Vision = require("../models/Vision");
+const SubVision = require("../models/SubVision");
+const Journal = require("../models/Journal");
 
 // @desc    Create a new Vision
 // @route   POST /api/visions
@@ -47,7 +49,11 @@ const createVision = asyncHandler(async (req, res) => {
 // @access  Private
 const getAllVisions = asyncHandler(async (req, res) => {
   const userId = req.user._id; // from auth middleware
-  const visions = await Vision.find({ userId }).sort({ createdAt: -1 });
+  const visions = await Vision.find({ userId })
+    .populate("subVisions", "_id title")
+    .populate("reflections")
+    .sort({ createdAt: -1 })
+    .lean();
   res.status(200).json(visions);
 });
 
@@ -104,18 +110,25 @@ const updateVision = asyncHandler(async (req, res) => {
 const deleteVision = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const deletedVision = await Vision.findByIdAndDelete(id);
+  const vision = await Vision.findById(id);
 
-  if (!deletedVision) {
+  if (!vision) {
     res.status(404);
     throw new Error("Vision not found");
   }
 
+  // 1️⃣ Delete related subvisions
+  await SubVision.deleteMany({ _id: { $in: vision.subVisions } });
+
+  // 2️⃣ Delete related journals
+  await Journal.deleteMany({ _id: { $in: vision.reflections } });
+
+  // 3️⃣ Delete the vision itself
+  await Vision.findByIdAndDelete(id);
+
   res.status(200).json({
-    message: "vision deleted successfully",
+    message: "Vision and related data deleted successfully",
     deletedId: id,
-    visiontitle: deletedVision.title,
-    visioncontent: deletedVision.description,
   });
 });
 

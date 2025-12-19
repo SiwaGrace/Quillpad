@@ -1,5 +1,6 @@
 import hero from "../assets/hero.png";
 import { Link, useOutletContext } from "react-router-dom";
+import { useSelector } from "react-redux";
 import SplashScreen from "../components/Dashboard/SplashScreen";
 
 import logoLeaf from "../assets/logo/quillpad_logo2.png";
@@ -11,7 +12,7 @@ import RightColumn from "../components/Dashboard/RightColumn";
 const progressImages = [random, random];
 
 const Dashboard = () => {
-  const { user } = useOutletContext();
+  const { user, loading } = useSelector((state) => state.auth);
 
   if (!user)
     return (

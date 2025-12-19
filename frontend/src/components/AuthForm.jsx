@@ -25,6 +25,14 @@ const AuthForm = ({
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // for checkbox?
+  // const handleChange = (e) => {
+  //   const { name, type, value, checked } = e.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: type === "checkbox" ? checked : value,
+  //   });
+  // };
 
   // 🔥 Handle form submit with Redux thunk
   const handleSubmit = async (e) => {
@@ -34,10 +42,10 @@ const AuthForm = ({
 
   // 🔥 Navigate after successful login/register
   useEffect(() => {
-    if (user) {
+    if (user && !loading && !error) {
       navigate("/home");
     }
-  }, [user, navigate]);
+  }, [user, loading, error, navigate]);
 
   return (
     <div className="min-h-screen flex justify-center items-center px-4">

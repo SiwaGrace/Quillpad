@@ -1,9 +1,14 @@
-import { Navigate, useOutletContext } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useOutletContext(); // get user from Root context
+  const { user, loading } = useSelector((state) => state.auth);
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (loading) return null; // or spinner
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   createJournal,
   fetchJournalById,
@@ -12,6 +12,11 @@ const EntryFormPage = ({ isEdit = false }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams(); // journal id for editing
+  const location = useLocation();
+
+  const redirectTo = location.state?.redirectTo || "/journal";
+  const preselectedVisionId = location.state?.visionId || "";
+  const preselectedSubVisionId = location.state?.subVisionId || "";
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -41,6 +46,17 @@ const EntryFormPage = ({ isEdit = false }) => {
     }
   }, [isEdit, currentEntry]);
 
+  useEffect(() => {
+    if (!isEdit) {
+      if (preselectedVisionId) {
+        setSelectedVision(preselectedVisionId);
+      }
+      if (preselectedSubVisionId) {
+        setSelectedSubVision(preselectedSubVisionId);
+      }
+    }
+  }, [isEdit, preselectedVisionId, preselectedSubVisionId]);
+
   const currentVision = visions.find((v) => v._id === selectedVision);
   const subVisions = currentVision?.subVisions || [];
 
@@ -49,7 +65,7 @@ const EntryFormPage = ({ isEdit = false }) => {
     const entryData = {
       title,
       content,
-      visionId: selectedVision || null,
+      visionId: selectedSubVision ? null : selectedVision || null,
       subVisionId: selectedSubVision || null,
     };
 
@@ -59,18 +75,25 @@ const EntryFormPage = ({ isEdit = false }) => {
       } else {
         await dispatch(createJournal(entryData)).unwrap();
       }
-      navigate("/journal");
+      navigate(redirectTo);
     } catch (err) {
       setLocalError(err);
     }
   };
 
   if (isEdit && status === "loading") return <p>Loading...</p>;
+  const lockVision = !!preselectedVisionId;
+  const lockSubVision = !!preselectedSubVisionId;
 
+  const heading = preselectedSubVisionId
+    ? "New Sub-Vision Journal"
+    : preselectedVisionId
+    ? "New Vision Journal"
+    : "New Journal Entry";
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-4xl font-bold text-gray-800 mb-6">
-        {isEdit ? "Edit Journal Entry" : "New Journal Entry"}
+        {isEdit ? "Edit Journal Entry" : heading}
       </h2>
 
       <form onSubmit={handleSubmit}>
@@ -112,6 +135,7 @@ const EntryFormPage = ({ isEdit = false }) => {
           <select
             id="vision"
             value={selectedVision}
+            disabled={lockVision}
             onChange={(e) => {
               setSelectedVision(e.target.value);
               setSelectedSubVision("");
@@ -136,6 +160,7 @@ const EntryFormPage = ({ isEdit = false }) => {
             <select
               id="subvision"
               value={selectedSubVision}
+              disabled={lockSubVision}
               onChange={(e) => setSelectedSubVision(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >

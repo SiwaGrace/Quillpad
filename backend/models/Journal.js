@@ -12,13 +12,12 @@ const JournalSchema = new mongoose.Schema(
     visionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vision",
-      // required: true,
-      // required: false,
       default: null,
     },
     subVisionId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vision.subVisions",
+      ref: "SubVision",
+      default: null,
     },
     title: {
       type: String,

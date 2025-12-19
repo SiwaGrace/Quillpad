@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import UserProfileMenu from "./UserProfileMenu";
 import logo from "../assets/logo/quillpad_logo.png";
 
-const Navigation = ({ user }) => {
+const Navigation = () => {
   const location = useLocation();
 
   // Your navigation items
@@ -41,7 +41,7 @@ const Navigation = ({ user }) => {
           ))}
 
           {/* Profile Dropdown */}
-          <UserProfileMenu user={user} />
+          <UserProfileMenu />
         </div>
       </div>
     </nav>

@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../api/auth";
 import avatar from "../assets/logo/quillpad_logo1.png";
 
-const UserProfileMenu = ({ user }) => {
+const UserProfileMenu = () => {
   const [open, setOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
   const toggleMenu = () => setOpen(!open);
 
@@ -16,7 +18,7 @@ const UserProfileMenu = ({ user }) => {
       console.error("Logout failed:", err);
     }
   };
-
+  if (!user) return null;
   return (
     <div className="relative inline-block text-left">
       {/* Profile Button */}
@@ -25,12 +27,12 @@ const UserProfileMenu = ({ user }) => {
         className="flex items-center space-x-2 hover:opacity-80 transition"
       >
         <img
-          src={user?.avatar || `${avatar}`}
-          alt="profile"
+          src={user?.avatar || avatar}
+          alt={user?.username || "User"}
           className="w-9 h-9 rounded-full border border-teal-200 object-cover cursor-pointer"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = { avatar }; // fallback if remote fails
+            e.target.src = avatar; // fallback if remote fails
           }}
         />
       </button>
@@ -45,7 +47,9 @@ const UserProfileMenu = ({ user }) => {
             <p className="text-sm font-semibold uppercase">
               {user?.username || "User"}
             </p>
-            <p className="text-xs text-gray-500">{user?.email}</p>
+            <p className="text-xs text-gray-500">
+              {user?.email || "email@example.com"}
+            </p>
           </div>
 
           <ul className="py-1">

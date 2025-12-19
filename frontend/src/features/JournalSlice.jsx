@@ -14,9 +14,13 @@ import {
 // GET all journals
 export const fetchJournals = createAsyncThunk(
   "journal/fetchJournals",
-  async (_, { rejectWithValue }) => {
+  async ({ visionId, subVisionId } = {}, { rejectWithValue }) => {
     try {
-      return await getJournals(); // returns res.data
+      const params = {};
+      if (visionId) params.visionId = visionId;
+      if (subVisionId) params.subVisionId = subVisionId;
+
+      return await getJournals(params);
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to fetch journals"
