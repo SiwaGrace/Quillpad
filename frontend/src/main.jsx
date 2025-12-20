@@ -42,6 +42,7 @@ import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
 import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
 import SubVisionList from "./components/SubVision/SubvisonList.jsx";
 import SubVisionEdit from "./components/SubVision/SubVisionEdit.jsx";
+import VisionEdit from "./components/VisionComponents/VisionEdit.jsx";
 // import MultiColorSpinner from "./components/Homepage/MultiColorSpinner.jsx";
 
 const router = createBrowserRouter(
@@ -130,6 +131,15 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <CaptureVision />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/visions/:id/edit"
+          element={
+            <PrivateRoute>
+              <VisionEdit />
             </PrivateRoute>
           }
         />

@@ -7,6 +7,19 @@ import {
   deleteVision,
 } from "../api/vision";
 
+export const addVision = createAsyncThunk(
+  "visions/add",
+  async (data, thunkAPI) => {
+    try {
+      return await createVision(data);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
 export const fetchVisions = createAsyncThunk(
   "visions/fetchAll",
   async (_, thunkAPI) => {
@@ -20,15 +33,13 @@ export const fetchVisions = createAsyncThunk(
   }
 );
 
-export const addVision = createAsyncThunk(
-  "visions/add",
-  async (data, thunkAPI) => {
+export const fetchVisionById = createAsyncThunk(
+  "visions/fetchById",
+  async (id, thunkAPI) => {
     try {
-      return await createVision(data);
+      return await getVisionById(id);
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || err.message
-      );
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -64,13 +75,14 @@ const visionSlice = createSlice({
   name: "visions",
   initialState: {
     items: [],
+    selected: null,
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetch all
+      /* ---------------- FETCH ALL ---------------- */
       .addCase(fetchVisions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -84,7 +96,21 @@ const visionSlice = createSlice({
         state.error = action.payload;
       })
 
-      // add
+      /* ---------------- FETCH ONE ---------------- */
+      .addCase(fetchVisionById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchVisionById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selected = action.payload;
+      })
+      .addCase(fetchVisionById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      /* ---------------- ADD ---------------- */
       .addCase(addVision.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -105,10 +131,16 @@ const visionSlice = createSlice({
       })
       .addCase(updateVisionById.fulfilled, (state, action) => {
         state.loading = false;
+        // update list
         const index = state.items.findIndex(
           (v) => v._id === action.payload._id
         );
         if (index !== -1) state.items[index] = action.payload;
+
+        // update selected if currently open
+        if (state.selected?._id === action.payload._id) {
+          state.selected = action.payload;
+        }
       })
       .addCase(updateVisionById.rejected, (state, action) => {
         state.loading = false;

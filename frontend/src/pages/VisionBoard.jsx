@@ -118,6 +118,14 @@ const VisionCardGrid = ({ visions }) => (
             <p className="text-sm text-gray-500">
               {vision.category || "Uncategorized"}
             </p>
+            <Link
+              to={`/visions/${vision._id}/edit`}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+             bg-teal-600 text-white font-medium shadow-sm
+             hover:bg-teal-700 transition"
+            >
+              ✏️ Edit Vision
+            </Link>
           </div>
 
           {/* NO LONGER NEEDED: Progress & Status elements were here, now they are floating above the image */}
