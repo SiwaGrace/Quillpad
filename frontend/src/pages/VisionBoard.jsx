@@ -6,47 +6,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdViewList, MdViewModule } from "react-icons/md";
 import v_image from "../assets/img/long_pcimage.jpg";
 import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
-
-// --- Helper Component for Circular Progress Bar (Unchanged) ---
-const CircularProgressBar = ({ progress }) => {
-  const radius = 25;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (progress / 100) * circumference;
-
-  const strokeColor = progress === 100 ? "text-green-600" : "text-teal-600";
-  const bgColor = "text-gray-200";
-
-  return (
-    <div className="relative h-14 w-14">
-      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 60 60">
-        <circle
-          cx="30"
-          cy="30"
-          r={radius}
-          strokeWidth="6"
-          fill="none"
-          className={bgColor}
-          stroke="currentColor"
-        />
-        <circle
-          cx="30"
-          cy="30"
-          r={radius}
-          strokeWidth="6"
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          className={`${strokeColor} transition-all duration-500`}
-          stroke="currentColor"
-        />
-      </svg>
-      <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-gray-500">
-        {progress}%
-      </span>
-    </div>
-  );
-};
+import CircularProgressBar from "../components/VisionDetailComponents/CircularProgressBar";
 
 // --- Helper Component for Status Badge (Unchanged) ---
 const StatusBadge = ({ status }) => {
@@ -73,84 +33,91 @@ const StatusBadge = ({ status }) => {
       );
   }
 };
+const progress = 67;
 
 // --- NEW: Grid View Component ---
-const VisionCardGrid = ({ visions }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-    {visions.map((vision) => (
-      <Link
-        key={vision._id}
-        to={`/visions/${vision._id}`}
-        // The parent element must be relative to position children absolutely
-        className="block rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 overflow-hidden relative"
-      >
-        {/* === 1. IMAGE SECTION (TOP HALF) === */}
-        <div className="relative h-40 w-full bg-gray-200">
-          <img
-            // Corrected image source interpolation
-            src={`${v_image}` || "[Image of abstract geometric background]"}
-            alt={`Image for ${vision.title}`}
-            className="w-full h-full object-cover"
-          />
-        </div>
+const VisionCardGrid = ({ visions }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      {visions.map((vision) => (
+        <div
+          key={vision._id}
+          onClick={() => navigate(`/visions/${vision._id}`)}
+          // The parent element must be relative to position children absolutely
+          className="block rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 overflow-hidden relative"
+        >
+          {/* === 1. IMAGE SECTION (TOP HALF) === */}
+          <div className="relative h-40 w-full bg-gray-200">
+            <img
+              // Corrected image source interpolation
+              src={`${v_image}` || "[Image of abstract geometric background]"}
+              alt={`Image for ${vision.title}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-        {/* === FLOATING ELEMENTS OVER IMAGE === */}
-        {/* Status Badge: Top Left */}
-        <div className="absolute top-3 left-3 z-10">
-          <StatusBadge status={vision.status} />
-        </div>
-        {/* Circular Progress Bar: Top Right */}
-        <div className="absolute top-3 right-3 z-10">
-          <CircularProgressBar progress={vision.progress} />
-        </div>
+          {/* === FLOATING ELEMENTS OVER IMAGE === */}
+          {/* Status Badge: Top Left */}
+          <div className="absolute top-3 left-3 z-10">
+            <StatusBadge status={vision.status} />
+          </div>
+          {/* Circular Progress Bar: Top Right */}
+          <div className="absolute top-3 right-3 z-10">
+            <CircularProgressBar progress={progress} size={56} />
+          </div>
 
-        {/* === 2. DATA SECTION (BOTTOM HALF) === */}
-        {/* Removed h-full here to allow the height to adjust based on content */}
-        <div className="p-5 bg-white flex flex-col justify-start">
-          {/* Header (Title and Category) */}
-          <div className="mb-4">
-            <div className="flex justify-between">
-              <h3 className="text-xl font-bold text-teal-800 truncate mb-1">
-                {vision.title}
-              </h3>
-              <DeleteVision vision={vision} />
-            </div>
-            <p className="text-sm text-gray-500">
-              {vision.category || "Uncategorized"}
-            </p>
-            <Link
-              to={`/visions/${vision._id}/edit`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+          {/* === 2. DATA SECTION (BOTTOM HALF) === */}
+          {/* Removed h-full here to allow the height to adjust based on content */}
+          <div className="p-5 bg-white flex flex-col justify-start">
+            {/* Header (Title and Category) */}
+            <div className="mb-4">
+              <div className="flex justify-between">
+                <h3 className="text-xl font-bold text-teal-800 truncate mb-1">
+                  {vision.title}
+                </h3>
+                <DeleteVision vision={vision} />
+              </div>
+              <p className="text-sm text-gray-500">
+                {vision.category || "Uncategorized"}
+              </p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent outer Link click
+                  navigate(`/visions/${vision._id}/edit`);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
              bg-teal-600 text-white font-medium shadow-sm
              hover:bg-teal-700 transition"
-            >
-              ✏️ Edit Vision
-            </Link>
-          </div>
+              >
+                ✏️ Edit Vision
+              </button>
+            </div>
 
-          {/* NO LONGER NEEDED: Progress & Status elements were here, now they are floating above the image */}
+            {/* NO LONGER NEEDED: Progress & Status elements were here, now they are floating above the image */}
 
-          {/* Footer Stats */}
-          {/* Removed bg-amber-800 which was likely a debugging artifact */}
-          <div className="flex justify-between text-sm text-gray-600 border-t pt-3">
-            <p>
-              Steps:
-              <span className="font-semibold text-teal-600 ml-1">
-                {vision.subVisionCount}
-              </span>
-            </p>
-            <p>
-              Target:
-              <span className="font-semibold ml-1">
-                {new Date(vision.targetDate).toLocaleDateString()}
-              </span>
-            </p>
+            {/* Footer Stats */}
+            {/* Removed bg-amber-800 which was likely a debugging artifact */}
+            <div className="flex justify-between text-sm text-gray-600 border-t pt-3">
+              <p>
+                Steps:
+                <span className="font-semibold text-teal-600 ml-1">
+                  {vision.subVisionCount}
+                </span>
+              </p>
+              <p>
+                Target:
+                <span className="font-semibold ml-1">
+                  {new Date(vision.targetDate).toLocaleDateString()}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
-      </Link>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 // --- Main Component ---
 const VisionBoard = () => {
@@ -208,7 +175,6 @@ const VisionBoard = () => {
 
     return vision.category === filter;
   });
-
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <header className="flex justify-between items-center mb-10 border-b pb-4">
@@ -337,7 +303,7 @@ const VisionBoard = () => {
                       <StatusBadge status={vision.status} />
                     </div>
                     <div className="col-span-2 flex justify-center">
-                      <CircularProgressBar progress={vision.progress} />
+                      <CircularProgressBar progress={progress} size={56} />
                     </div>
                     <div className="col-span-1 text-sm text-center font-medium text-teal-600">
                       {vision.subVisionCount}

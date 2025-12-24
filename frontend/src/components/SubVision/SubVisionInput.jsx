@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { addSubVision } from "../../features/SubVisionSlice";
+import { fetchVisionById } from "../../features/VisionSlice";
 
 const SubVisionInput = () => {
   const { id: visionId } = useParams();
@@ -22,6 +23,7 @@ const SubVisionInput = () => {
     e.preventDefault();
 
     await dispatch(addSubVision({ visionId, data: form }));
+    dispatch(fetchVisionById(visionId));
     navigate(`/visions/${visionId}`);
   };
 

@@ -28,10 +28,6 @@ const visionSchema = new mongoose.Schema(
         ref: "Journal", // general reflections (not tied to sub-visions)
       },
     ],
-    progress: {
-      type: Number,
-      default: 0, // auto-calculated from subvisions later
-    },
     startDate: Date,
     targetDate: Date,
     subVisions: [

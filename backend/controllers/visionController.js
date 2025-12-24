@@ -2,6 +2,10 @@ const asyncHandler = require("express-async-handler");
 const Vision = require("../models/Vision");
 const SubVision = require("../models/SubVision");
 const Journal = require("../models/Journal");
+const {
+  subVisionProgressFromStatus,
+  recalculateVisionStatusAndProgress,
+} = require("../utils/progressUtils");
 
 // @desc    Create a new Vision
 // @route   POST /api/visions
@@ -33,7 +37,6 @@ const createVision = asyncHandler(async (req, res) => {
     status: status || "not started",
     subVisions: subVisions || [],
     reflections: [],
-    progress: 0,
     startDate: startDate || null,
     targetDate: targetDate || null,
   });
@@ -50,7 +53,7 @@ const createVision = asyncHandler(async (req, res) => {
 const getAllVisions = asyncHandler(async (req, res) => {
   const userId = req.user._id; // from auth middleware
   const visions = await Vision.find({ userId })
-    .populate("subVisions", "_id title")
+    .populate("subVisions")
     .populate("reflections")
     .sort({ createdAt: -1 })
     .lean();
@@ -95,10 +98,17 @@ const updateVision = asyncHandler(async (req, res) => {
   vision.title = title || vision.title;
   vision.description = description || vision.description;
   vision.category = category || vision.category;
-  vision.status = status || vision.status;
+  // vision.status = status || vision.status;
   vision.subVisions = subVisions || vision.subVisions;
   vision.startDate = startDate || vision.startDate;
   vision.targetDate = targetDate || vision.targetDate;
+  if (vision.subVisions.length === 0 && status) {
+    vision.status = status;
+    // vision.progress = subVisionProgressFromStatus(status);
+  }
+  if (vision.subVisions.length > 0) {
+    await recalculateVisionStatusAndProgress(vision._id);
+  }
 
   const updatedVision = await vision.save();
   res.json(updatedVision);

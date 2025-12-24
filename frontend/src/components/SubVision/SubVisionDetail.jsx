@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import { fetchSubVisionById } from "../../features/SubVisionSlice";
+import {
+  fetchSubVisionById,
+  updateSubVisionById,
+} from "../../features/SubVisionSlice";
 import { fetchJournals } from "../../features/JournalSlice";
+import { fetchVisionById } from "../../features/VisionSlice";
 
 const SubVisionDetail = () => {
   const { id: visionId, subId } = useParams();
   const dispatch = useDispatch();
   const { entries: journals } = useSelector((state) => state.journal);
+  const [status, setStatus] = React.useState("");
 
   const {
     selected: subVision,
@@ -20,6 +25,12 @@ const SubVisionDetail = () => {
     dispatch(fetchJournals({ subVisionId: subId }));
   }, [dispatch, visionId, subId]);
 
+  useEffect(() => {
+    if (subVision) {
+      setStatus(subVision.status);
+    }
+  }, [subVision]);
+
   if (loading) return <p className="text-center text-teal-600">Loading...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
   if (!subVision) return <p>No details found.</p>;
@@ -27,7 +38,7 @@ const SubVisionDetail = () => {
   const subVisionJournals = journals.filter(
     (j) => j.subVisionId?._id === subId
   );
-
+  const progress = subVision.progress;
   return (
     <div className="max-w-3xl mx-auto bg-white shadow p-6 mt-6 rounded-lg">
       <div className="flex justify-between">
@@ -48,11 +59,38 @@ const SubVisionDetail = () => {
       <p className="mt-2 text-gray-600">{subVision.description}</p>
 
       <div className="mt-4 grid grid-cols-2 text-sm">
+        <div>
+          <strong>Status:</strong>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="ml-2 border px-2 py-1 rounded"
+          >
+            <option value="not started">Not Started</option>
+            <option value="in progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+
+          <button
+            disabled={loading}
+            onClick={() => {
+              dispatch(
+                updateSubVisionById({
+                  visionId,
+                  subId,
+                  data: { status },
+                })
+              );
+              dispatch(fetchVisionById(visionId));
+            }}
+            className="ml-3 bg-teal-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Update
+          </button>
+        </div>
+
         <p>
-          <strong>Status:</strong> {subVision.status}
-        </p>
-        <p>
-          <strong>Progress:</strong> {subVision.progress}%
+          <strong>Progress:</strong> {progress}%
         </p>
       </div>
 

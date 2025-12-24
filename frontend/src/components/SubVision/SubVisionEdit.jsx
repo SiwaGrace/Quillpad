@@ -5,6 +5,7 @@ import {
   fetchSubVisionById,
   updateSubVisionById,
 } from "../../features/SubVisionSlice";
+import { fetchVisionById } from "../../features/VisionSlice";
 
 const SubVisionEdit = () => {
   const { id: visionId, subId } = useParams();
@@ -37,7 +38,10 @@ const SubVisionEdit = () => {
       updateSubVisionById({ visionId, subId, data: { title, description } })
     )
       .unwrap()
-      .then(() => navigate(`/visions/${visionId}/subvision/${subId}`))
+      .then(() => {
+        dispatch(fetchVisionById(visionId));
+        navigate(`/visions/${visionId}/subvision/${subId}`);
+      })
       .catch((err) => console.error(err));
   };
 

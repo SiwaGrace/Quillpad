@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { removeSubVision } from "../../features/SubVisionSlice";
+import { fetchVisionById } from "../../features/VisionSlice";
 
 const SubVisionItem = ({ subVision }) => {
   const { id: visionId } = useParams();
@@ -14,7 +15,9 @@ const SubVisionItem = ({ subVision }) => {
   const handleDelete = (e) => {
     e.preventDefault(); // prevent navigating via Link
     if (window.confirm("Are you sure you want to delete this SubVision?")) {
-      dispatch(removeSubVision({ visionId, subId: subVision._id }));
+      dispatch(removeSubVision({ visionId, subId: subVision._id }))
+        .unwrap()
+        .then(() => dispatch(fetchVisionById(visionId)));
     }
   };
 

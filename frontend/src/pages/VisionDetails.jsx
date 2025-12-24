@@ -7,87 +7,8 @@ import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
 import SubvisonList from "../components/SubVision/SubvisonList";
 import { fetchJournals } from "../features/JournalSlice";
 import JournalReflectionItem from "../components/VisionDetailComponents/JournalReflectionItem";
+import CircularProgressBar from "../components/VisionDetailComponents/CircularProgressBar";
 
-// --- Helper Component: CircularProgressBar (Adapted to new size/color) ---
-const CircularProgressBar = ({ progress, size = 60 }) => {
-  const radius = size / 2 - 5; // Adjusted for padding/stroke
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (progress / 100) * circumference;
-
-  const strokeColor = progress === 100 ? "text-green-600" : "text-teal-600";
-  const bgColor = "text-success-500";
-
-  return (
-    <div className={`relative h-[${size}px] w-[${size}px]`}>
-      <svg
-        className="w-full h-full transform -rotate-90"
-        viewBox={`0 0 ${size} ${size}`}
-      >
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth="5"
-          fill="none"
-          className={bgColor}
-          stroke="currentColor"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth="5"
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          className={`${strokeColor} transition-all duration-500`}
-          stroke="currentColor"
-        />
-      </svg>
-      <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-bold text-gray-700">
-        {progress}%
-      </span>
-    </div>
-  );
-};
-// --- Helper Component: SubVisionItem ---
-// const SubVisionItem = ({ subVision }) => {
-//   const checkStyle =
-//     subVision.status === "completed"
-//       ? "text-green-500 bg-green-100"
-//       : "text-gray-500 bg-gray-100";
-
-//   return (
-//     <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-teal-400 transition cursor-pointer">
-//       <div className="flex items-center space-x-3">
-//         {/* Status Circle */}
-//         <div
-//           className={`h-4 w-4 rounded-full ${checkStyle} flex items-center justify-center`}
-//         >
-//           {subVision.status === "completed" && (
-//             <span className="text-xs">✓</span>
-//           )}
-//         </div>
-//         <div>
-//           <h4 className="font-semibold text-gray-800">{subVision.title}</h4>
-//         </div>
-//       </div>
-
-//       {/* Progress */}
-//       <div className="text-right text-sm">
-//         <p className="font-bold text-teal-600">{subVision.progress || 0}%</p>
-//         <p className="text-xs text-gray-500">
-//           {subVision.reflections.length} reflections
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// ------------------------------------------------------------------------------------------------
-// --- Main Component: VisionDetails ---
-// ------------------------------------------------------------------------------------------------
 const VisionDetails = () => {
   const dispatch = useDispatch();
   const { id: visionId } = useParams();
@@ -141,7 +62,7 @@ const VisionDetails = () => {
 
   // Journals associated with this vision
   const visionJournals = journals.filter((j) => j.visionId?._id === visionId);
-
+  const progress = 67;
   return (
     <div className="max-w-7xl mx-auto">
       <div className="p-8">
@@ -216,7 +137,7 @@ const VisionDetails = () => {
               <h3 className="text-lg font-semibold text-gray-700 mb-4">
                 Overall Vision Progress
               </h3>
-              <CircularProgressBar progress={vision.progress} size={150} />
+              <CircularProgressBar progress={progress} size={150} />
             </div>
 
             {/* Journal Reflections */}

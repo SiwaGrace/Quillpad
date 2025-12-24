@@ -1,6 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const Vision = require("../models/Vision");
 const SubVision = require("../models/SubVision");
+const {
+  subVisionProgressFromStatus,
+  recalculateVisionStatusAndProgress,
+} = require("../utils/progressUtils");
 
 // ---------------------------------------------
 // ADD Sub-Vision
@@ -16,6 +20,7 @@ const addSubVision = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Vision not found");
   }
+  const progress = subVisionProgressFromStatus(status);
 
   const newSub = await SubVision.create({
     visionId,
@@ -23,11 +28,19 @@ const addSubVision = asyncHandler(async (req, res) => {
     description: description || "",
     status: status || "not started",
     reflections: [],
-    progress: 0,
+    progress,
   });
 
   vision.subVisions.push(newSub._id);
   await vision.save();
+  await recalculateVisionStatusAndProgress(visionId);
+
+  // // Optional: return full updated Vision
+  // const updatedVision = await Vision.findById(visionId).populate("subVisions");
+  // res.status(201).json(updatedVision);
+  //   This way the frontend immediately knows the Vision’s new status/progress and all subvisions, not just the new one.
+
+  // But if your frontend only needs the new subvision, your current code is perfectly fine.
 
   res.status(201).json(newSub);
 });
@@ -71,7 +84,7 @@ const getSubVisionById = asyncHandler(async (req, res) => {
 // ---------------------------------------------
 const updateSubVision = asyncHandler(async (req, res) => {
   const { visionId, subId } = req.params;
-  const { title, description, status, progress } = req.body;
+  const { title, description, status } = req.body;
 
   const sub = await SubVision.findOne({ _id: subId, visionId });
   if (!sub) {
@@ -79,12 +92,17 @@ const updateSubVision = asyncHandler(async (req, res) => {
     throw new Error("Sub-vision not found");
   }
 
+  if (status) {
+    sub.status = status;
+    sub.progress = subVisionProgressFromStatus(status);
+  }
+
   sub.title = title ?? sub.title;
   sub.description = description ?? sub.description;
-  sub.status = status ?? sub.status;
-  sub.progress = progress ?? sub.progress;
 
   await sub.save();
+  await recalculateVisionStatusAndProgress(visionId);
+
   res.json(sub);
 });
 
@@ -105,6 +123,7 @@ const deleteSubVision = asyncHandler(async (req, res) => {
   await Vision.findByIdAndUpdate(visionId, {
     $pull: { subVisions: sub._id },
   });
+  await recalculateVisionStatusAndProgress(visionId);
 
   res.json({ message: "Sub-vision deleted", subId });
 });
