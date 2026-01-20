@@ -34,7 +34,7 @@ export const fetchUser = createAsyncThunk("auth/getMe", async (_, thunkAPI) => {
   try {
     return await getMe();
   } catch (error) {
-    return thunkAPI.rejectWithValue(null); // user not logged in
+    return thunkAPI.rejectWithValue("UNAUTHORIZED"); // user not logged in
   }
 });
 
@@ -52,6 +52,7 @@ const authSlice = createSlice({
     loginLoading: false,
     registerLoading: false,
     error: null,
+    authChecked: false, // 🔑 key fix
   },
 
   reducers: {},
@@ -97,11 +98,13 @@ const authSlice = createSlice({
         // VM2409:1  GET http://localhost:4000/api/auth/me 401 (Unauthorized) when loggedout
         state.user = action.payload?.user || null;
         state.message = action.payload?.message || null;
+        state.authChecked = true; // ✅ stop future calls
       })
       .addCase(fetchUser.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.message = null;
+        state.authChecked = true; // ✅ stop future calls
       })
 
       // LOGOUT

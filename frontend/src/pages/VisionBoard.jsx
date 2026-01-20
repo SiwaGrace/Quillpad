@@ -33,7 +33,6 @@ const StatusBadge = ({ status }) => {
       );
   }
 };
-const progress = 67;
 
 // --- NEW: Grid View Component ---
 const VisionCardGrid = ({ visions }) => {
@@ -64,7 +63,7 @@ const VisionCardGrid = ({ visions }) => {
           </div>
           {/* Circular Progress Bar: Top Right */}
           <div className="absolute top-3 right-3 z-10">
-            <CircularProgressBar progress={progress} size={56} />
+            <CircularProgressBar progress={vision.progress} size={56} />
           </div>
 
           {/* === 2. DATA SECTION (BOTTOM HALF) === */}
@@ -303,7 +302,10 @@ const VisionBoard = () => {
                       <StatusBadge status={vision.status} />
                     </div>
                     <div className="col-span-2 flex justify-center">
-                      <CircularProgressBar progress={progress} size={56} />
+                      <CircularProgressBar
+                        progress={vision.progress}
+                        size={56}
+                      />
                     </div>
                     <div className="col-span-1 text-sm text-center font-medium text-teal-600">
                       {vision.subVisionCount}

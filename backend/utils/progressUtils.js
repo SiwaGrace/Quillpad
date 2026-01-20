@@ -9,7 +9,7 @@ const subVisionProgressFromStatus = (status) => {
 };
 
 // Recalculate Vision status and progress from its SubVisions
-const recalculateVisionStatusAndProgress = async (visionId) => {
+const recalculateVisionStatus = async (visionId) => {
   const vision = await Vision.findById(visionId).populate("subVisions");
   if (!vision) return;
 
@@ -20,22 +20,22 @@ const recalculateVisionStatusAndProgress = async (visionId) => {
       vision.status === "completed"
         ? "completed"
         : vision.status === "in progress"
-        ? "in progress"
-        : "not started";
+          ? "in progress"
+          : "not started";
 
     await vision.save();
     return;
   }
 
-  // Compute average progress from subvisions
-  const progresses = vision.subVisions.map((s) => s.progress);
-  const avg = Math.round(
-    progresses.reduce((a, b) => a + b, 0) / progresses.length
+  // Determine status based on subVision progress
+  const totalProgress = vision.subVisions.reduce(
+    (sum, sub) => sum + subVisionProgressFromStatus(sub.status),
+    0,
   );
+  const avgProgress = Math.round(totalProgress / vision.subVisions.length);
 
-  // Determine vision status
-  if (avg === 0) vision.status = "not started";
-  else if (avg === 100) vision.status = "completed";
+  if (avgProgress === 0) vision.status = "not started";
+  else if (avgProgress === 100) vision.status = "completed";
   else vision.status = "in progress";
 
   await vision.save();
@@ -43,5 +43,5 @@ const recalculateVisionStatusAndProgress = async (visionId) => {
 
 module.exports = {
   subVisionProgressFromStatus,
-  recalculateVisionStatusAndProgress,
+  recalculateVisionStatus,
 };

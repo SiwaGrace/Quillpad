@@ -4,7 +4,7 @@ const SubVision = require("../models/SubVision");
 const Journal = require("../models/Journal");
 const {
   subVisionProgressFromStatus,
-  recalculateVisionStatusAndProgress,
+  recalculateVisionStatus,
 } = require("../utils/progressUtils");
 
 // @desc    Create a new Vision
@@ -52,11 +52,27 @@ const createVision = asyncHandler(async (req, res) => {
 // @access  Private
 const getAllVisions = asyncHandler(async (req, res) => {
   const userId = req.user._id; // from auth middleware
-  const visions = await Vision.find({ userId })
+  const visionsnopro = await Vision.find({ userId })
     .populate("subVisions")
     .populate("reflections")
     .sort({ createdAt: -1 })
     .lean();
+
+  const visions = visionsnopro.map((vision) => {
+    if (!vision.subVisions || vision.subVisions.length === 0)
+      return { ...vision, progress: 0 };
+
+    const total = vision.subVisions.reduce(
+      (sum, sub) => sum + subVisionProgressFromStatus(sub.status),
+      0,
+    );
+
+    return {
+      ...vision,
+      progress: Math.round(total / vision.subVisions.length),
+    };
+  });
+
   res.status(200).json(visions);
 });
 
@@ -71,7 +87,17 @@ const getVisionById = asyncHandler(async (req, res) => {
     throw new Error("Vision not found");
   }
 
-  res.json(vision);
+  // Add dynamic progress
+  let progress = 0;
+  if (vision.subVisions && vision.subVisions.length > 0) {
+    const total = vision.subVisions.reduce(
+      (sum, sub) => sum + subVisionProgressFromStatus(sub.status),
+      0,
+    );
+    progress = Math.round(total / vision.subVisions.length);
+  }
+
+  res.json({ ...vision.toObject(), progress });
 });
 
 // @desc    Update Vision by ID
@@ -107,7 +133,7 @@ const updateVision = asyncHandler(async (req, res) => {
     // vision.progress = subVisionProgressFromStatus(status);
   }
   if (vision.subVisions.length > 0) {
-    await recalculateVisionStatusAndProgress(vision._id);
+    await recalculateVisionStatus(vision._id);
   }
 
   const updatedVision = await vision.save();

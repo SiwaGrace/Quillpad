@@ -3,7 +3,7 @@ const Vision = require("../models/Vision");
 const SubVision = require("../models/SubVision");
 const {
   subVisionProgressFromStatus,
-  recalculateVisionStatusAndProgress,
+  recalculateVisionStatus,
 } = require("../utils/progressUtils");
 
 // ---------------------------------------------
@@ -33,7 +33,7 @@ const addSubVision = asyncHandler(async (req, res) => {
 
   vision.subVisions.push(newSub._id);
   await vision.save();
-  await recalculateVisionStatusAndProgress(visionId);
+  await recalculateVisionStatus(visionId);
 
   // // Optional: return full updated Vision
   // const updatedVision = await Vision.findById(visionId).populate("subVisions");
@@ -101,7 +101,7 @@ const updateSubVision = asyncHandler(async (req, res) => {
   sub.description = description ?? sub.description;
 
   await sub.save();
-  await recalculateVisionStatusAndProgress(visionId);
+  await recalculateVisionStatus(visionId);
 
   res.json(sub);
 });
@@ -123,7 +123,7 @@ const deleteSubVision = asyncHandler(async (req, res) => {
   await Vision.findByIdAndUpdate(visionId, {
     $pull: { subVisions: sub._id },
   });
-  await recalculateVisionStatusAndProgress(visionId);
+  await recalculateVisionStatus(visionId);
 
   res.json({ message: "Sub-vision deleted", subId });
 });

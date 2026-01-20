@@ -56,13 +56,13 @@ const VisionDetails = () => {
 
   // Calculate Sub-Vision Completion Count
   const completedSubVisions = vision.subVisions.filter(
-    (sub) => sub.status === "completed"
+    (sub) => sub.status === "completed",
   ).length;
   const subVisionCount = vision.subVisions.length;
 
   // Journals associated with this vision
   const visionJournals = journals.filter((j) => j.visionId?._id === visionId);
-  const progress = 67;
+  // const progress = 67;
   return (
     <div className="max-w-7xl mx-auto">
       <div className="p-8">
@@ -137,7 +137,7 @@ const VisionDetails = () => {
               <h3 className="text-lg font-semibold text-gray-700 mb-4">
                 Overall Vision Progress
               </h3>
-              <CircularProgressBar progress={progress} size={150} />
+              <CircularProgressBar progress={vision.progress} size={150} />
             </div>
 
             {/* Journal Reflections */}
