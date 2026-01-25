@@ -37,7 +37,7 @@ import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
 import VisionBoard from "./pages/VisionBoard.jsx";
 import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
 import Visionfirst from "./components/whatever/visionfirst.jsx";
-import VisionDetails from "./pages/VisionDetails.jsx";
+import VisionDetails from "./components/VisionComponents/VisionDetails.jsx";
 import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
 import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
 import SubVisionList from "./components/SubVision/SubvisonList.jsx";
@@ -187,8 +187,8 @@ const router = createBrowserRouter(
           }
         />
       </Route>
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 createRoot(document.getElementById("root")).render(
@@ -198,6 +198,6 @@ createRoot(document.getElementById("root")).render(
       <Toaster position="top-center" reverseOrder={false} />
       <RouterProvider router={router} />
     </HelmetProvider>
-  </Provider>
+  </Provider>,
   // </StrictMode>
 );

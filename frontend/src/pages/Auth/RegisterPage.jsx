@@ -4,11 +4,12 @@ import { register } from "../../features/authSlices";
 const RegisterPage = () => {
   return (
     <AuthForm
-      title="Create Your Journal"
+      title="Begin your journey"
+      desc="Create your private sanctuary for reflection."
       buttonText="Register"
       footerText="Already have an account?"
       footerLink="/login"
-      footerLinkText="Login"
+      footerLinkText="Sign in"
       authAction={register}
     />
   );

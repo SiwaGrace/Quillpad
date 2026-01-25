@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 const SEO = () => (
   <Helmet>
     {/* Basic SEO */}
-    <title>QuillPad — Capture Your Thoughts</title>
+    <title>QuillPad - Digital Sanctuary for Solo Founders</title>
     <meta
       name="description"
       content="QuillPad helps you write, reflect, and grow with powerful journaling tools."

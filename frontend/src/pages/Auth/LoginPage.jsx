@@ -5,10 +5,11 @@ const LoginPage = () => {
   return (
     <AuthForm
       title="Login to Your Journal"
+      desc="Continue your creative journey"
       buttonText="Login"
       footerText="Don't have an account?"
       footerLink="/register"
-      footerLinkText="Register"
+      footerLinkText="Create an account"
       authAction={login}
     />
   );

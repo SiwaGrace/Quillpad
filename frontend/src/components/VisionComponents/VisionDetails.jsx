@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchVisions } from "../features/VisionSlice";
+import { fetchVisions } from "../../features/VisionSlice";
 import { Link } from "react-router-dom";
-import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
-import SubvisonList from "../components/SubVision/SubvisonList";
-import { fetchJournals } from "../features/JournalSlice";
-import JournalReflectionItem from "../components/VisionDetailComponents/JournalReflectionItem";
-import CircularProgressBar from "../components/VisionDetailComponents/CircularProgressBar";
+import DeleteVision from "../VisionDetailComponents/DeleteVision";
+import SubvisonList from "../SubVision/SubvisonList";
+import { fetchJournals } from "../../features/JournalSlice";
+import JournalReflectionItem from "../VisionDetailComponents/JournalReflectionItem";
+import CircularProgressBar from "../VisionDetailComponents/CircularProgressBar";
 
 const VisionDetails = () => {
   const dispatch = useDispatch();
