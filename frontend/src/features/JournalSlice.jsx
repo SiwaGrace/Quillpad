@@ -23,10 +23,10 @@ export const fetchJournals = createAsyncThunk(
       return await getJournals(params);
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to fetch journals"
+        err.response?.data?.message || "Failed to fetch journals",
       );
     }
-  }
+  },
 );
 
 // GET one journal by ID
@@ -37,10 +37,10 @@ export const fetchJournalById = createAsyncThunk(
       return await getJournal(id); // returns res.data
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to fetch journal"
+        err.response?.data?.message || "Failed to fetch journal",
       );
     }
-  }
+  },
 );
 
 // ADD a journal
@@ -51,10 +51,10 @@ export const createJournal = createAsyncThunk(
       return await addJournal(journalData);
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to create journal"
+        err.response?.data?.message || "Failed to create journal",
       );
     }
-  }
+  },
 );
 
 // DELETE a journal
@@ -65,10 +65,10 @@ export const removeJournal = createAsyncThunk(
       return await deleteJournal(id);
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to delete journal"
+        err.response?.data?.message || "Failed to delete journal",
       );
     }
-  }
+  },
 );
 
 // UPDATE a journal
@@ -79,10 +79,10 @@ export const editJournal = createAsyncThunk(
       return await updateJournal(id, updatedJournal);
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to update journal"
+        err.response?.data?.message || "Failed to update journal",
       );
     }
-  }
+  },
 );
 
 // ============================
@@ -104,13 +104,16 @@ const journalSlice = createSlice({
       // ===== GET Journals =====
       .addCase(fetchJournals.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
       })
       .addCase(fetchJournals.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.entries = action.payload; // array of journals
       })
       .addCase(fetchJournals.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
       // ===== GET Journal =====
@@ -140,7 +143,7 @@ const journalSlice = createSlice({
       .addCase(editJournal.fulfilled, (state, action) => {
         const updatedJournal = action.payload;
         const index = state.entries.findIndex(
-          (j) => j._id === updatedJournal._id
+          (j) => j._id === updatedJournal._id,
         );
         if (index !== -1) {
           state.entries[index] = updatedJournal;

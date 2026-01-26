@@ -2,49 +2,60 @@ import { Link, useLocation } from "react-router-dom";
 import UserProfileMenu from "./UserProfileMenu";
 import logo from "../assets/logo/quillpad_logo.png";
 
-const Navigation = () => {
+import { MdRemoveRedEye, MdBook, MdDashboard } from "react-icons/md";
+
+const Navigation = ({ onClose }) => {
   const location = useLocation();
 
   // Your navigation items
   const navLinks = [
-    { label: "My Visions", path: "/vision" },
-    { label: "My Journals", path: "/journal" },
-    // you can add more links any time
+    { label: "Dashboard", path: "/home", icon: <MdDashboard /> },
+    { label: "My Visions", path: "/vision", icon: <MdRemoveRedEye /> },
+    { label: "My Journals", path: "/journal", icon: <MdBook /> },
   ];
 
-  // Reusable function for styling links
+  // Updated styling for vertical sidebar
   const linkClasses = (path) =>
-    `font-bold py-1 transition ${
+    `flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
       location.pathname === path
-        ? "border-b-2 border-indigo-600 text-indigo-600"
-        : "text-gray-700 hover:text-indigo-600"
+        ? "bg-primary/10 text-primary border-l-4 border-primary"
+        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
     }`;
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/home">
-          <img src={logo} alt="quillpad logo" className="w-17 p-0 " />
-        </Link>
+    <div className="flex flex-col h-full justify-between">
+      <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-between px-2">
+          <Link to="/home" onClick={onClose}>
+            <img src={logo} alt="logo" className="w-20" />
+          </Link>
+          {/* Show close button ONLY if onClose exists (Mobile) */}
+          {onClose && (
+            <button onClick={onClose} className="md:hidden p-2">
+              ✕
+            </button>
+          )}
+        </div>
 
-        {/* Nav Links */}
-        <div className="flex items-center space-x-6">
+        <nav className="flex flex-col gap-2">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               className={linkClasses(link.path)}
+              onClick={onClose} // Close sidebar on mobile when link is clicked
             >
-              {link.label}
+              <span className="material-symbols-outlined">{link.icon}</span>
+              <span className="text-sm">{link.label}</span>
             </Link>
           ))}
-
-          {/* Profile Dropdown */}
-          <UserProfileMenu />
-        </div>
+        </nav>
       </div>
-    </nav>
+
+      <div className="pt-6 border-t border-gray-100 dark:border-gray-800">
+        <UserProfileMenu />
+      </div>
+    </div>
   );
 };
 
