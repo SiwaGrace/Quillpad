@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { removeJournal } from "../../features/JournalSlice";
@@ -5,67 +6,108 @@ import {
   PiTrashLight,
   PiPencilSimpleLineLight,
   PiEyeLight,
+  PiDotsThreeVerticalBold,
 } from "react-icons/pi";
 
-const JournalEntryCard = ({ id, title, date, excerpt }) => {
+const JournalEntryCard = ({
+  id,
+  title,
+  date,
+  month,
+  day,
+  excerpt,
+  visionLinked,
+}) => {
   const dispatch = useDispatch();
+  const [showMenu, setShowMenu] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
+    setShowMenu(false);
+    if (window.confirm("Delete this entry forever?")) {
       dispatch(removeJournal(id));
     }
   };
 
   return (
-    <div className="border border-primary-400 hover:bg-teal-50 p-4 rounded-lg shadow-sm bg-white">
-      <h3 className="text-xl font-semibold truncate text-primary-500 w-full">
-        {title}
-      </h3>
-      <p className="text-gray-500 text-sm mb-2">{date}</p>
-      {/* line-clamp-3 or truncate */}
-      <p className="text-gray-700  mb-4  line-clamp-3">{excerpt}</p>
-
-      <div className="flex gap-3">
-        {/* View */}
-        <div className="relative group">
-          <Link
-            to={`/journal/${id}`}
-            className="text-indigo-600 hover:text-indigo-700"
-          >
-            <PiEyeLight size={20} />
-          </Link>
-          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-            View
+    <>
+      <div className="flex  p-6 gap-4  rounded-2xl">
+        <div
+          className="hidden sm:flex flex-col items-center justify-start pt-1 text-slate-400"
+          style={{ fontFamily: "var(--font-script)" }}
+        >
+          <span className="text-xs font-sans font-bold uppercase tracking-tighter">
+            {month}
           </span>
+          <span className="text-xl font-bold">{day}</span>
         </div>
 
-        {/* Edit */}
-        <div className="relative group">
-          <Link
-            to={`/journal/${id}/edit`}
-            className="text-green-600 hover:text-green-700"
-          >
-            <PiPencilSimpleLineLight size={20} />
-          </Link>
-          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-            Edit
-          </span>
-        </div>
+        <div
+          className="group  relative flex flex-col gap-2   transition-all  w-full"
+          onMouseLeave={() => setShowMenu(false)}
+        >
+          {/* Header & Menu Button */}
+          <div className="flex justify-between items-start">
+            <Link to={`/journal/${id}`} className="flex-1">
+              <h3 className="serif-text text-xl font-bold text-[#0e1b19] dark:text-white group-hover:text-primary transition-colors leading-tight">
+                {title}
+              </h3>
+            </Link>
 
-        {/* Delete */}
-        <div className="relative group">
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:text-red-700 transition-colors duration-150 cursor-pointer"
-          >
-            <PiTrashLight size={20} />
-          </button>
-          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-            Delete
-          </span>
+            <div className="relative">
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400"
+              >
+                <PiDotsThreeVerticalBold size={24} />
+              </button>
+
+              {/* Action Dropdown */}
+              {showMenu && (
+                <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-[#0c1817] border border-gray-100 dark:border-gray-800 rounded-xl shadow-xl z-10 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                  <Link
+                    to={`/journal/${id}`}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <PiPencilSimpleLineLight size={18} /> Edit
+                  </Link>
+                  <button
+                    onClick={handleDelete}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                  >
+                    <PiTrashLight size={18} /> Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Date */}
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            {date}
+          </p>
+
+          {/* Excerpt */}
+          <Link to={`/journal/${id}`}>
+            <p className="text-base leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-3 italic font-display">
+              {excerpt || "No content provided..."}
+            </p>
+          </Link>
+
+          {/* Tags (The "Vision Linked" badge) */}
+          <div className="flex gap-2 mt-3">
+            <span className="text-[10px] font-bold uppercase px-2 py-1 bg-slate-100 dark:bg-gray-800 text-slate-500 dark:text-gray-400 rounded-md">
+              category
+            </span>
+            {visionLinked && (
+              <span className="text-[10px] font-bold uppercase px-2 py-1 bg-primary/10 text-primary rounded-md flex items-center gap-1">
+                <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
+                Vision Linked
+              </span>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

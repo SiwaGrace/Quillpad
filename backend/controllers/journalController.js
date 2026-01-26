@@ -106,7 +106,7 @@ const getJournal = asyncHandler(async (req, res) => {
 // @route   PUT /api/journals/:id
 // @access  Private
 const updateJournal = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, visionId } = req.body;
   const { id } = req.params;
 
   const journal = await Journal.findById(id);
@@ -121,9 +121,10 @@ const updateJournal = asyncHandler(async (req, res) => {
     {
       title: title || journal.title,
       content: content || journal.content,
+      visionId: visionId !== undefined ? visionId : journal.visionId,
       updatedAt: Date.now(),
     },
-    { new: true }
+    { new: true },
   );
 
   res.status(200).json(updatedJournal);

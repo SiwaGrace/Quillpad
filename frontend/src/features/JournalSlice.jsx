@@ -141,7 +141,11 @@ const journalSlice = createSlice({
 
       // ===== UPDATE Journal =====
       .addCase(editJournal.fulfilled, (state, action) => {
+        state.status = "succeeded";
         const updatedJournal = action.payload;
+        // 1. UPDATE THE CURRENT ACTIVE ENTRY (This fixes the UI lag!)
+        state.currentEntry = action.payload;
+        // 2. Update the journal in the list (for the dashboard)
         const index = state.entries.findIndex(
           (j) => j._id === updatedJournal._id,
         );

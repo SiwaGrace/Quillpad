@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { fetchJournalById } from "../../features/JournalSlice";
-
+// ?what is this
 const SingleJournalPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const { selectedJournal, status, error } = useSelector(
-    (state) => state.journal
+    (state) => state.journal,
   );
 
   useEffect(() => {

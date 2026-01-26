@@ -30,7 +30,7 @@ import Dashboard from "./pages/Dashborad.jsx";
 import About from "./pages/About.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
 import NewEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
-import EntryDetailPage from "./components/JournalComponents/EntryDetailPage.jsx";
+import JournalDetailPage from "./components/JournalComponents/JournalDetailPage.jsx";
 import EditEntryPage from "./components/JournalComponents/EditEntryPage.jsx";
 
 import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
@@ -111,7 +111,7 @@ const router = createBrowserRouter(
           path="journal/:id"
           element={
             <PrivateRoute>
-              <EntryDetailPage />
+              <JournalDetailPage />
             </PrivateRoute>
           }
         />
