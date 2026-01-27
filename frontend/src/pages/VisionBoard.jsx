@@ -4,119 +4,11 @@ import { fetchVisions } from "../features/VisionSlice";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 // NOTE: For the toggle, you would import icons here, e.g.,
 import { MdViewList, MdViewModule } from "react-icons/md";
-import v_image from "../assets/img/long_pcimage.jpg";
-import DeleteVision from "../components/VisionDetailComponents/DeleteVision";
 import CircularProgressBar from "../components/VisionDetailComponents/CircularProgressBar";
-
-// --- Helper Component for Status Badge (Unchanged) ---
-const StatusBadge = ({ status }) => {
-  const baseStyle = "px-3 py-1 text-xs font-semibold rounded-full";
-  switch (status) {
-    case "completed":
-      return (
-        <span className={`${baseStyle} bg-green-100 text-green-800`}>
-          Completed
-        </span>
-      );
-    case "in progress":
-      return (
-        <span className={`${baseStyle} bg-yellow-100 text-yellow-800`}>
-          In Progress
-        </span>
-      );
-    case "not started":
-    default:
-      return (
-        <span className={`${baseStyle} bg-gray-100 text-gray-800`}>
-          Not Started
-        </span>
-      );
-  }
-};
-
-// --- NEW: Grid View Component ---
-const VisionCardGrid = ({ visions }) => {
-  const navigate = useNavigate();
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-      {visions.map((vision) => (
-        <div
-          key={vision._id}
-          onClick={() => navigate(`/visions/${vision._id}`)}
-          // The parent element must be relative to position children absolutely
-          className="block rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 overflow-hidden relative"
-        >
-          {/* === 1. IMAGE SECTION (TOP HALF) === */}
-          <div className="relative h-40 w-full bg-gray-200">
-            <img
-              // Corrected image source interpolation
-              src={`${v_image}` || "[Image of abstract geometric background]"}
-              alt={`Image for ${vision.title}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* === FLOATING ELEMENTS OVER IMAGE === */}
-          {/* Status Badge: Top Left */}
-          <div className="absolute top-3 left-3 z-10">
-            <StatusBadge status={vision.status} />
-          </div>
-          {/* Circular Progress Bar: Top Right */}
-          <div className="absolute top-3 right-3 z-10">
-            <CircularProgressBar progress={vision.progress} size={56} />
-          </div>
-
-          {/* === 2. DATA SECTION (BOTTOM HALF) === */}
-          {/* Removed h-full here to allow the height to adjust based on content */}
-          <div className="p-5 bg-white flex flex-col justify-start">
-            {/* Header (Title and Category) */}
-            <div className="mb-4">
-              <div className="flex justify-between">
-                <h3 className="text-xl font-bold text-teal-800 truncate mb-1">
-                  {vision.title}
-                </h3>
-                <DeleteVision vision={vision} />
-              </div>
-              <p className="text-sm text-gray-500">
-                {vision.category || "Uncategorized"}
-              </p>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent outer Link click
-                  navigate(`/visions/${vision._id}/edit`);
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-             bg-teal-600 text-white font-medium shadow-sm
-             hover:bg-teal-700 transition"
-              >
-                ✏️ Edit Vision
-              </button>
-            </div>
-
-            {/* NO LONGER NEEDED: Progress & Status elements were here, now they are floating above the image */}
-
-            {/* Footer Stats */}
-            {/* Removed bg-amber-800 which was likely a debugging artifact */}
-            <div className="flex justify-between text-sm text-gray-600 border-t pt-3">
-              <p>
-                Steps:
-                <span className="font-semibold text-teal-600 ml-1">
-                  {vision.subVisionCount}
-                </span>
-              </p>
-              <p>
-                Target:
-                <span className="font-semibold ml-1">
-                  {new Date(vision.targetDate).toLocaleDateString()}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+import VisionCardGrid from "../components/VisionComponents/VisionCardGrid";
+import StatusBadge from "../components/VisionComponents/StatusBadge";
+import { GoSearch } from "react-icons/go";
+import VisionListView from "../components/VisionComponents/VisionListView";
 
 // --- Main Component ---
 const VisionBoard = () => {
@@ -125,7 +17,7 @@ const VisionBoard = () => {
   const location = useLocation();
   const [filter, setFilter] = useState("all");
   // NEW STATE: Toggle between 'list' (table) and 'grid' (cards)
-  const [viewMode, setViewMode] = useState("list");
+  const [viewMode, setViewMode] = useState("grid");
 
   // Get data directly from Redux
   const {
@@ -175,20 +67,93 @@ const VisionBoard = () => {
     return vision.category === filter;
   });
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <header className="flex justify-between items-center mb-10 border-b pb-4">
-        <h1 className="text-3xl font-extrabold text-teal-800">
-          All Visions ({filteredVisions.length})
-        </h1>
-        <Link to="/createvision" state={{ from: location.pathname }}>
-          <button className="px-6 py-2 bg-teal-600 text-white font-medium rounded-lg shadow-md hover:bg-teal-700 transition cursor-pointer">
-            + New Vision
+    <div>
+      <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white dark:bg-[#0e1b19]/80 backdrop-blur-md border-b border-[#e8f3f2] dark:border-[#1e3230]">
+        {/* Search Bar Container */}
+        <div className="flex-1 max-w-xs md:max-w-xl transition-all duration-300">
+          <div className="relative group">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#50958f] text-[20px]">
+              search
+            </span>
+            <input
+              className="w-full pl-11 pr-4 py-2.5 bg-[#f0f5f5] dark:bg-[#1a2e2c] border-none rounded-xl focus:ring-2 focus:ring-[#4ce6d9]/50 text-sm placeholder:text-gray-400 dark:text-gray-200 transition-all"
+              placeholder="Search your visions..."
+              type="text"
+            />
+          </div>
+        </div>
+
+        {/* Actions Area */}
+        <div className="flex items-center gap-2 md:gap-4 ml-3 md:ml-6">
+          {/* Notification Button - Hidden on very small screens or kept as icon */}
+          <button className="hidden sm:flex w-10 h-10 items-center justify-center rounded-xl bg-[#e8f3f2] dark:bg-[#1a2e2c] text-[#0e1b19] dark:text-white hover:bg-[#d8e8e6] dark:hover:bg-[#243f3c] transition-colors">
+            <span className="material-symbols-outlined text-[22px]">
+              notifications
+            </span>
           </button>
-        </Link>
+
+          {/* New Vision Button */}
+          <Link to="/createvision" state={{ from: location.pathname }}>
+            <button className="flex items-center gap-2 px-3 md:px-5 py-2.5 bg-[#4ce6d9] text-[#0e1b19] font-bold text-sm rounded-xl hover:shadow-lg hover:shadow-[#4ce6d9]/20 transition-all active:scale-95">
+              <span className="material-symbols-outlined text-[20px]">add</span>
+              <span className="hidden md:inline">New Vision</span>
+            </button>
+          </Link>
+        </div>
       </header>
 
+      {/* Vision title, List, Grid */}
+      <div className="mt-12">
+        <h1 className="text-3xl font-black text-black">
+          All Visions ({filteredVisions.length})
+        </h1>
+
+        {/* Search and View Toggle */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          {/* Branding / Tagline */}
+          <div>
+            <h1 className="text-sm md:text-base font-bold  tracking-wide text-[#50958f] dark:text-[#4ce6d9]/80">
+              Transform your dreams into structured milestones
+            </h1>
+          </div>
+
+          {/* View Toggle Buttons */}
+          <div className="flex h-11 bg-[#e8f3f2] dark:bg-[#1a2e2c] p-1 rounded-xl w-fit self-end sm:self-auto transition-all">
+            {/* Card/Grid Button */}
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`flex items-center gap-2 px-3 sm:px-6 rounded-lg transition-all duration-200 ${
+                viewMode === "grid"
+                  ? "bg-white dark:bg-[#0e1b19] shadow-sm text-[#0e1b19] dark:text-white font-bold"
+                  : "text-[#50958f] hover:text-[#0e1b19] dark:hover:text-white"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                grid_view
+              </span>
+              <span className="hidden sm:inline text-sm">Card</span>
+            </button>
+
+            {/* List Button */}
+            <button
+              onClick={() => setViewMode("list")}
+              className={`flex items-center gap-2 px-3 sm:px-6 rounded-lg transition-all duration-200 ${
+                viewMode === "list"
+                  ? "bg-white dark:bg-[#0e1b19] shadow-sm text-[#0e1b19] dark:text-white font-bold"
+                  : "text-[#50958f] hover:text-[#0e1b19] dark:hover:text-white"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                list
+              </span>
+              <span className="hidden sm:inline text-sm">List</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* --- Filter Bar and Toggle --- */}
-      <div className="flex flex-col gap-8 mb-8">
+      <div className="flex flex-col gap-8 my-8">
         {/* Filter Buttons */}
         <ul className="flex flex-wrap gap-2 items-center mb-4 md:mb-0">
           {dynamicFilterOptions.map((option) => (
@@ -208,42 +173,7 @@ const VisionBoard = () => {
             </li>
           ))}
         </ul>
-
-        {/* Search and View Toggle */}
-        <div className="flex items-center space-x-3">
-          <input
-            type="text"
-            placeholder="Search visions..."
-            className="p-2 border border-gray-300 rounded-lg shadow-sm w-full max-w-sm focus:outline-none  focus:border-teal-500"
-          />
-          {/* View Toggle Buttons */}
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-            <button
-              onClick={() => setViewMode("list")}
-              className={`p-2 transition ${
-                viewMode === "list"
-                  ? "bg-teal-600 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-100"
-              }`}
-              aria-label="List View"
-            >
-              <MdViewList />
-            </button>
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`p-2 transition ${
-                viewMode === "grid"
-                  ? "bg-teal-600 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-100"
-              }`}
-              aria-label="Grid View"
-            >
-              <MdViewModule />
-            </button>
-          </div>
-        </div>
       </div>
-
       {/* --- Loading and Error States --- */}
       {loading && (
         <div className="text-center py-12">
@@ -273,50 +203,7 @@ const VisionBoard = () => {
         <>
           {/* 1. LIST VIEW (Default/Table) */}
           {viewMode === "list" && (
-            <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-              <div className="min-w-full divide-y divide-gray-200">
-                {/* Header Row */}
-                <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="col-span-4">Vision Title</span>
-                  <span className="col-span-2">Category</span>
-                  <span className="col-span-2">Status</span>
-                  <span className="col-span-2">Progress</span>
-                  <span className="col-span-1 text-center">Steps</span>
-                  <span className="col-span-1">Target Date</span>
-                </div>
-
-                {/* Vision Data Rows */}
-                {filteredVisions.map((vision) => (
-                  <Link
-                    key={vision._id}
-                    to={`/visions/${vision._id}`} // Use Link for navigation
-                    className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-teal-50 transition duration-100 cursor-pointer items-center"
-                  >
-                    <div className="col-span-4 font-semibold text-gray-800 truncate">
-                      {vision.title}
-                    </div>
-                    <div className="col-span-2 text-sm text-gray-600">
-                      {vision.category}
-                    </div>
-                    <div className="col-span-2">
-                      <StatusBadge status={vision.status} />
-                    </div>
-                    <div className="col-span-2 flex justify-center">
-                      <CircularProgressBar
-                        progress={vision.progress}
-                        size={56}
-                      />
-                    </div>
-                    <div className="col-span-1 text-sm text-center font-medium text-teal-600">
-                      {vision.subVisionCount}
-                    </div>
-                    <div className="col-span-1 text-sm text-gray-500">
-                      {new Date(vision.targetDate).toLocaleDateString()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <VisionListView filteredVisions={filteredVisions} />
           )}
 
           {/* 2. GRID VIEW (Cards) */}

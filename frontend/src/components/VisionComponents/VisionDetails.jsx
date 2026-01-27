@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchVisions } from "../../features/VisionSlice";
-import { Link } from "react-router-dom";
+import { fetchJournals } from "../../features/JournalSlice";
 import DeleteVision from "../VisionDetailComponents/DeleteVision";
 import SubvisonList from "../SubVision/SubvisonList";
-import { fetchJournals } from "../../features/JournalSlice";
 import JournalReflectionItem from "../VisionDetailComponents/JournalReflectionItem";
-import CircularProgressBar from "../VisionDetailComponents/CircularProgressBar";
 
 const VisionDetails = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id: visionId } = useParams();
 
   const {
@@ -21,7 +20,6 @@ const VisionDetails = () => {
   const { entries: journals } = useSelector((state) => state.journal);
   const vision = visions.find((v) => v._id === visionId);
 
-  // FIX FOR RELOAD
   useEffect(() => {
     if (visionId && !vision && !loading) {
       dispatch(fetchVisions());
@@ -29,165 +27,181 @@ const VisionDetails = () => {
     dispatch(fetchJournals({ visionId }));
   }, [dispatch, visionId, vision, loading]);
 
-  if (loading && !vision) {
+  if (loading && !vision)
     return (
-      <div className="p-8 text-center text-teal-600">
-        <h2 className="text-2xl font-semibold">Loading vision details...</h2>
+      <div className="p-8 text-center text-primary-400 animate-pulse">
+        Loading vision dashboard...
       </div>
     );
-  }
-  if (error) {
+  if (!vision)
     return (
-      <div className="p-8 text-center text-red-600">
-        <h2 className="text-2xl font-semibold">
-          Error loading details: {error}
-        </h2>
-      </div>
+      <div className="p-8 text-center text-gray-500">Vision not found.</div>
     );
-  }
-  if (!vision) {
-    return (
-      <div className="p-8 text-center text-gray-600">
-        <h2 className="text-2xl font-semibold">Vision not found.</h2>
-        <p>ID: {visionId}</p>
-      </div>
-    );
-  }
 
-  // Calculate Sub-Vision Completion Count
-  const completedSubVisions = vision.subVisions.filter(
-    (sub) => sub.status === "completed",
-  ).length;
-  const subVisionCount = vision.subVisions.length;
-
-  // Journals associated with this vision
   const visionJournals = journals.filter((j) => j.visionId?._id === visionId);
-  // const progress = 67;
+
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="p-8">
-        {/* === HEADER SECTION (TITLE, CATEGORY, STATUS) === */}
-        <div className="flex justify-between items-start  pb-6 mb-6">
+    <main className="flex-1 overflow-y-auto custom-scrollbar  dark:bg-[#0e1b19] transition-colors duration-300">
+      {/* === TOP HEADER & BREADCRUMBS === */}
+      <div className="max-w-[1200px] mx-auto  pt-8 pb-4">
+        <div className="flex  items-center gap-2 mb-4">
+          <Link
+            to="/vision"
+            className="text-[#479e97] text-sm font-medium hover:underline"
+          >
+            Visions
+          </Link>
+          <span className="text-[#479e97] text-sm">/</span>
+          <span className="text-[#0d1c1b] dark:text-slate-200 text-sm font-medium opacity-60">
+            {vision.title}
+          </span>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="text-sm text-gray-500 mb-1">
-              Category:{" "}
-              <span className="font-semibold text-teal-700">
-                {vision.category || "N/A"}
-              </span>
-            </p>
-            <h1 className="text-4xl font-extrabold text-gray-800">
+            <span className="px-3 py-1 rounded-full bg-primary-400/10 text-primary-400 text-[10px] font-bold uppercase tracking-widest mb-2 inline-block">
+              {vision.category || "General"}
+            </span>
+            <h1 className="font-serif text-[#0d1c1b] dark:text-white text-4xl md:text-5xl font-bold tracking-tight capitalize">
               {vision.title}
             </h1>
           </div>
-          {/* Action buttons (Mock) */}
-          <DeleteVision vision={vision} />
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(`/visions/${vision._id}/edit`)}
+              className="flex items-center gap-2 bg-primary-400 hover:bg-primary-400/90 text-white px-5 py-1.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-primary-400/20 whitespace-nowrap min-w-fit"
+            >
+              <span className="material-symbols-outlined ">edit</span>
+              <span>Edit Vision</span>
+            </button>
+
+            <DeleteVision vision={vision} redirectOnDelete={true}>
+              <button className="px-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
+                <span className="material-symbols-outlined">delete</span>
+              </button>
+            </DeleteVision>
+          </div>
         </div>
+      </div>
 
-        {/* === MAIN CONTENT GRID === */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* --------------------- COLUMN 1: VISION DETAILS & SUB-VISIONS --------------------- */}
-          <div className="md:col-span-2 space-y-8">
-            {/* Vision Metadata (Status, Dates, Description) */}
-            <div className="flex flex-col space-y-2 text-gray-600">
-              <div className="grid grid-cols-2 text-sm">
-                <p>
-                  <span className="font-semibold mr-1">Status:</span>
-                  <span className="capitalize">{vision.status}</span>
-                </p>
-                <p>
-                  <span className="font-semibold mr-1">Start Date:</span>
-                  {vision.startDate
-                    ? new Date(vision.startDate).toLocaleDateString()
-                    : "N/A"}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 text-sm">
-                <p>
-                  <span className="font-semibold mr-1">Target Date:</span>
-                  {vision.targetDate
-                    ? new Date(vision.targetDate).toLocaleDateString()
-                    : "N/A"}
-                </p>
-                <p>
-                  <span className="font-semibold mr-1">Sub-Visions:</span>
-                  {completedSubVisions}/{subVisionCount} Completed
-                </p>
-              </div>
-              <div className="pt-4">
-                <p className="font-semibold text-gray-700 mb-1">Description:</p>
-                <p className="text-gray-600 text-sm italic">
-                  {vision.description || "No detailed description provided."}
-                </p>
-              </div>
-            </div>
-
-            {/* Sub-Visions List */}
-
-            <SubvisonList
-              subVisionCount={subVisionCount}
-              vision={vision}
-              // SubVisionItem={SubVisionItem}
-            />
+      {/* === MAIN DASHBOARD GRID === */}
+      <div className="max-w-[1200px] mx-auto  grid grid-cols-12 gap-6 md:gap-8 py-8">
+        {/* LEFT COLUMN: Sub-Visions (Milestones) */}
+        <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 order-1 ">
+          <div className="bg-gradient-to-br from-primary-400/10 to-transparent p-5 rounded-2xl border border-primary-400/10">
+            <p className="text-xs font-bold text-primary-400 uppercase tracking-wider mb-2">
+              Description
+            </p>
+            <p className="text-sm font-medium text-[#0d1c1b] dark:text-slate-300 leading-relaxed italic">
+              "{vision.description || "Set your focus for this journey..."}"
+            </p>
           </div>
 
-          {/* --------------------- COLUMN 2: PROGRESS & REFLECTIONS --------------------- */}
-          <div className="space-y-8">
-            {/* Overall Progress */}
-            <div className="flex flex-col items-center p-4">
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                Overall Vision Progress
-              </h3>
-              <CircularProgressBar progress={vision.progress} size={150} />
-            </div>
+          <div className="bg-white dark:bg-[#142d2a] p-5 rounded-2xl border border-[#e6f4f3] dark:border-[#1a3b38] shadow-sm">
+            {/* We pass the logic into your existing SubvisionList component */}
+            <SubvisonList vision={vision} />
+          </div>
+        </div>
 
-            {/* Journal Reflections */}
-            <div className="rounded-lg p-4 bg-gray-50">
-              <div className="flex justify-between">
-                <h3 className="text-lg font-semibold text-gray-700 mb-3">
-                  Journal Reflections
-                </h3>
-                <Link
-                  to="/journal/new"
-                  state={{
-                    redirectTo: `/visions/${visionId}`,
-                    visionId,
-                  }}
-                  className=" text-indigo-700 underline rounded-md"
-                >
-                  New Journal
-                </Link>
+        {/* CENTER COLUMN: Journal Feed */}
+        <div className="col-span-12 lg:col-span-6 flex flex-col gap-6 order-2 lg:order-2">
+          <div className="flex items-center justify-between px-2">
+            <h2 className="text-xl font-bold dark:text-white">
+              Linked Journal
+            </h2>
+            <Link
+              to="/journal/new"
+              state={{ redirectTo: `/visions/${visionId}`, visionId }}
+              className="flex items-center gap-2 bg-white dark:bg-[#142d2a] border border-primary-400/30 text-primary-400 px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary-400 hover:text-white transition-all shadow-sm"
+            >
+              <span className="material-symbols-outlined text-[20px]">add</span>
+              <span>New Entry</span>
+            </Link>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {visionJournals.length > 0 ? (
+              visionJournals.map((j) => (
+                <JournalReflectionItem key={j._id} journal={j} />
+              ))
+            ) : (
+              <div className="bg-dashed border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center text-slate-400">
+                No entries linked to this vision yet.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: Stats & Insights */}
+        <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 order-3">
+          <div className="bg-white dark:bg-[#142d2a] p-6 rounded-2xl border border-[#e6f4f3] dark:border-[#1a3b38] shadow-sm">
+            <h2 className="text-[#0d1c1b] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary-400">
+                bar_chart
+              </span>
+              Vision Stats
+            </h2>
+
+            <div className="flex flex-col gap-8">
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-xs font-bold text-[#479e97] uppercase mb-1">
+                    Progress
+                  </p>
+                  <p className="text-3xl font-black text-[#0d1c1b] dark:text-white">
+                    {vision.progress}%
+                  </p>
+                </div>
+                <div className="mb-1 text-primary-400">
+                  <span className="material-symbols-outlined font-bold">
+                    trending_up
+                  </span>
+                </div>
               </div>
 
-              {visionJournals.length > 0 ? (
-                <div className="space-y-2">
-                  {visionJournals.map((j) => (
-                    <JournalReflectionItem key={j._id} journal={j} />
-                  ))}
+              <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-xs font-bold text-[#479e97] uppercase">
+                    Clarity Score
+                  </p>
+                  <span className="text-lg font-black text-primary-400">
+                    85%
+                  </span>
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500 italic">
-                  No journal reflections yet for this vision.
-                </p>
-              )}
-            </div>
 
-            {/* Daily Prompt */}
-            <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-              <h3 className="text-md font-bold text-gray-700 mb-2">
-                Daily Prompt for Vision
-              </h3>
-              <p className="text-gray-600 italic">
-                What is one fear holding you back, how will you overcome it?
+                {/* Visual Sparkline */}
+                <div className="h-16 w-full relative overflow-hidden rounded-xl bg-primary-400/5">
+                  <svg className="w-full h-full" viewBox="0 0 100 30">
+                    <path
+                      d="M0 25 L10 22 L20 26 L30 18 L40 20 L50 12 L60 15 L70 8 L80 12 L90 5 L100 8"
+                      fill="none"
+                      stroke="#4ce6d9"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-[#142d2a] p-5 rounded-2xl border-l-4 border-primary-400 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-primary-400 text-sm font-bold">
+                lightbulb
+              </span>
+              <p className="text-xs font-bold text-[#0d1c1b] dark:text-white uppercase">
+                Vision Insight
               </p>
             </div>
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-snug italic">
+              "Focus on small wins this week to boost your momentum."
+            </p>
           </div>
         </div>
-
-        <p className="text-xs text-right text-gray-400 mt-6">
-          Offline Sync: All changes saved
-        </p>
       </div>
-    </div>
+    </main>
   );
 };
 

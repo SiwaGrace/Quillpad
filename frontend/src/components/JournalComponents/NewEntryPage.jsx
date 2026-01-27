@@ -85,9 +85,9 @@ const EntryFormPage = ({ isEdit = false }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcfdfd] dark:bg-[#0e1b19] transition-colors duration-500">
+    <div className="min-h-screen  dark:bg-[#0e1b19] transition-colors duration-500 w-full">
       {/* Immersive Header */}
-      <header className="fixed top-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-white/80 dark:bg-[#0e1b19]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+      <header className=" w-full flex items-center justify-between px-8 py-4 bg-white/80 dark:bg-[#0e1b19]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 ">
         <button
           onClick={() => navigate(-1)}
           className="text-[#50958f] p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all"
@@ -114,7 +114,7 @@ const EntryFormPage = ({ isEdit = false }) => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto pt-32 pb-20 px-6">
+      <main className="max-w-4xl mx-auto pt-16 pb-20 px-6 mt-12 bg-[#fcfdfd]">
         {/* Dynamic Context Selector */}
         <div className="flex flex-wrap items-center gap-4 mb-16">
           {/* Vision Pill */}

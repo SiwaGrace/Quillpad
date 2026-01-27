@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addVision, fetchVisions } from "../../features/VisionSlice";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 const INITIAL_VISION_STATE = {
   title: "",
   description: "",
-  category: "",
-  startDate: "",
+  category: "Personal Development", // Default for better UX
+  startDate: new Date().toISOString().split("T")[0], // Default to today
   targetDate: "",
 };
 
@@ -22,6 +22,14 @@ function CaptureVision() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const categories = [
+    { name: "Career", icon: "rocket_launch" },
+    { name: "Health", icon: "fitness_center" },
+    { name: "Creative", icon: "palette" },
+    { name: "Spiritual", icon: "auto_awesome" },
+    { name: "Finance", icon: "payments" },
+  ];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVisionData((prev) => ({ ...prev, [name]: value }));
@@ -29,19 +37,8 @@ function CaptureVision() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("AUTH USER:", user);
-    console.log("USER ID:", currentUserId);
-
-    if (!currentUserId) {
-      toast.error("You must be logged in to create a vision.");
-      return;
-    }
-
-    if (!visionData.title.trim()) {
-      toast.error("Vision title is required.");
-      return;
-    }
+    if (!currentUserId) return toast.error("Please login first.");
+    if (!visionData.title.trim()) return toast.error("Title is required.");
 
     const finalVisionData = {
       ...visionData,
@@ -51,120 +48,138 @@ function CaptureVision() {
 
     try {
       await dispatch(addVision(finalVisionData)).unwrap();
-      // alert("Vision saved successfully!");
-      toast.success("Vision saved successfully!");
-      setVisionData(INITIAL_VISION_STATE);
-      dispatch(fetchVisions()); // refresh all visionss
-      setTimeout(() => navigate(location.state?.from || "/home"), 500);
+      toast.success("Vision manifested!");
+      dispatch(fetchVisions());
+      setTimeout(() => navigate(location.state?.from || "/vision"), 500);
     } catch (err) {
-      toast.error(err.message || "Failed to save vision.");
+      toast.error(err.message || "Failed to save.");
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-xl rounded-xl border border-gray-100">
-      <h2 className="text-3xl font-extrabold text-teal-800 mb-6 border-b pb-2">
-        💡 Capture a New Vision
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <input type="hidden" name="userId" value={currentUserId || ""} />
+    <div className="max-w-4xl mx-auto p-4 md:p-8">
+      {/* Header Section */}
+      <div className="mb-10 text-center">
+        <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary-400/10 text-primary-400 mb-4">
+          <span className="material-symbols-outlined text-4xl">lightbulb</span>
+        </div>
+        <h2 className="text-4xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">
+          What is your next{" "}
+          <span className="text-primary-400 italic">Vision?</span>
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-2">
+          Define your goal, set your timeline, and start the journey.
+        </p>
+      </div>
 
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Vision Title <span className="text-red-500">*</span>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-12 gap-6 bg-white dark:bg-[#142d2a] p-8 rounded-3xl border border-slate-200 dark:border-[#1a3b38] shadow-2xl shadow-primary-400/5"
+      >
+        {/* Title: Full Width */}
+        <div className="col-span-12">
+          <label className="block text-xs font-black uppercase tracking-widest text-primary-400 mb-2">
+            Vision Title
           </label>
           <input
             type="text"
             name="title"
+            placeholder="e.g. Master React & Three.js"
             value={visionData.title}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
+            className="w-full bg-slate-50 dark:bg-[#0e1b19] border-none rounded-2xl py-4 px-6 text-lg font-semibold focus:ring-2 focus:ring-primary-400 dark:text-white transition-all outline-none "
           />
         </div>
 
+        {/* Category: Horizontal Scroll Chips */}
+        <div className="col-span-12">
+          <label className="block text-xs font-black uppercase tracking-widest text-primary-400 mb-3">
+            Category
+          </label>
+          <div className="flex flex-wrap gap-3">
+            {categories.map((cat) => (
+              <button
+                key={cat.name}
+                type="button"
+                onClick={() =>
+                  setVisionData((prev) => ({ ...prev, category: cat.name }))
+                }
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 transition-all font-bold text-sm ${
+                  visionData.category === cat.name
+                    ? "border-primary-400 bg-primary-400/10 text-primary-400 shadow-lg shadow-primary-400/20"
+                    : "border-slate-100 dark:border-slate-800 text-slate-400 hover:border-slate-200"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">
+                  {cat.icon}
+                </span>
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Description */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
+        <div className="col-span-12">
+          <label className="block text-xs font-black uppercase tracking-widest text-primary-400 mb-2">
+            Detailed Intention
           </label>
           <textarea
             name="description"
             value={visionData.description}
             onChange={handleChange}
             rows="4"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
+            placeholder="Describe the end result as if it has already happened..."
+            className="w-full bg-slate-50 dark:bg-[#0e1b19] border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-primary-400 dark:text-white transition-all resize-none outline-none "
           />
         </div>
 
-        {/* Category & Status */}
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              name="category"
-              value={visionData.category}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
-            >
-              <option value="">Select Category</option>
-              <option value="Spiritual Growth">Spiritual Growth</option>
-              <option value="Career">Career</option>
-              <option value="Health & Wellness">Health & Wellness</option>
-              <option value="Personal Development">Personal Development</option>
-              <option value="Relationships">Relationships</option>
-            </select>
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <div className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-600">
-              Not started
-            </div>
-          </div>
-        </div>
-
         {/* Dates */}
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Start Date
-            </label>
-            <input
-              type="date"
-              name="startDate"
-              value={visionData.startDate}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
-            />
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Target Date
-            </label>
-            <input
-              type="date"
-              name="targetDate"
-              value={visionData.targetDate}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none  focus:border-teal-500"
-            />
-          </div>
+        <div className="col-span-12 md:col-span-6">
+          <label className="block text-xs font-black uppercase tracking-widest text-primary-400 mb-2">
+            Start Date
+          </label>
+          <input
+            type="date"
+            name="startDate"
+            value={visionData.startDate}
+            onChange={handleChange}
+            className="w-full bg-slate-50 dark:bg-[#0e1b19] border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-primary-400 dark:text-white appearance-none outline-none "
+          />
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 rounded-lg bg-teal-600 text-white text-lg font-medium shadow-md hover:bg-teal-700 disabled:opacity-50 cursor-pointer"
-        >
-          {loading ? "Saving..." : "Save Vision & Plan Sub-Goals"}
-        </button>
-        {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+        <div className="col-span-12 md:col-span-6">
+          <label className="block text-xs font-black uppercase tracking-widest text-primary-400 mb-2">
+            Target Date
+          </label>
+          <input
+            type="date"
+            name="targetDate"
+            value={visionData.targetDate}
+            onChange={handleChange}
+            className="w-full bg-slate-50 dark:bg-[#0e1b19] border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-primary-400 dark:text-white outline-none "
+          />
+        </div>
+
+        {/* Submit Action */}
+        <div className="col-span-12 pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-5 rounded-2xl bg-primary-400 text-slate-900 text-lg font-black shadow-xl shadow-primary-400/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <span className="animate-spin material-symbols-outlined">
+                sync
+              </span>
+            ) : (
+              <>
+                <span>Begin Vision Journey</span>
+                <span className="material-symbols-outlined">east</span>
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

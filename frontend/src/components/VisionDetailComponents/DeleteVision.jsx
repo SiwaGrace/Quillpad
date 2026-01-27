@@ -2,49 +2,53 @@ import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeVision } from "../../features/VisionSlice";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
+// 1. Sleek Confirmation Modal
 const ConfirmationModal = ({ isOpen, title, onConfirm, onCancel, loading }) => {
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-gray-900 opacity-95 flex justify-center items-center z-50 p-4"
-      onClick={onCancel}
+      className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex justify-center items-center z-[100] p-4"
+      onClick={loading ? undefined : onCancel}
     >
       <div
-        className="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 space-y-4"
+        className="bg-white dark:bg-[#1a2e2c] rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-6 border border-gray-100 dark:border-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold text-red-600 border-b pb-2">
-          Confirm Deletion
-        </h3>
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-red-600 dark:text-red-400">
+            Confirm Deletion
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            Are you sure you want to delete{" "}
+            <span className="font-bold text-gray-900 dark:text-white italic">
+              "{title}"
+            </span>
+            ? This action is permanent.
+          </p>
+        </div>
 
-        <p className="text-gray-700">
-          Are you sure you want to delete the vision:
-          <span className="font-semibold italic block mt-1">"{title}"</span>
-          This action cannot be undone.
-        </p>
-
-        <div className="flex justify-end space-x-3 pt-3">
+        <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition cursor-pointer"
+            className="flex-1 px-4 py-2.5 text-sm font-bold text-gray-500 bg-gray-100 dark:bg-[#0e1b19] dark:text-gray-400 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
             disabled={loading}
           >
-            Cancel
+            Keep it
           </button>
 
           <button
             onClick={onConfirm}
-            className={`px-4 py-2 text-white font-semibold rounded-lg shadow-md transition 
-              ${
-                loading
-                  ? "bg-red-400"
-                  : "bg-red-600 hover:bg-red-700 cursor-pointer"
-              }`}
+            className={`flex-1 px-4 py-2.5 text-sm font-bold text-white rounded-xl shadow-lg transition-all ${
+              loading
+                ? "bg-red-400 cursor-not-allowed"
+                : "bg-red-600 hover:bg-red-700 active:scale-95"
+            }`}
             disabled={loading}
           >
-            {loading ? "Deleting..." : "Delete Permanently"}
+            {loading ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>
@@ -52,81 +56,63 @@ const ConfirmationModal = ({ isOpen, title, onConfirm, onCancel, loading }) => {
   );
 };
 
-const DeleteVision = ({ vision }) => {
+// Add children and redirectOnDelete to the props here
+const DeleteVision = ({ vision, children, redirectOnDelete = true }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loading = useSelector(
-    (state) => state.visions.deletingId === vision?._id
+    (state) => state.visions.deletingId === vision?._id,
   );
 
-  if (!vision) {
-    return <p className="text-red-500 text-sm">Vision data missing.</p>;
-  }
+  if (!vision) return null;
 
-  const visionId = vision._id;
-
-  const handleOpenModal = useCallback((e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const handleOpenModal = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Stops the card from opening when clicking delete
     setIsModalOpen(true);
-  }, []);
+  };
 
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
-
-  const handleDelete = useCallback(async () => {
+  const handleDelete = async () => {
     try {
-      await dispatch(removeVision(visionId)).unwrap();
+      await toast.promise(dispatch(removeVision(vision._id)).unwrap(), {
+        loading: "Deleting vision...",
+        success: <b>Vision successfully deleted!</b>,
+        error: <b>Could not delete vision.</b>,
+      });
 
-      handleCloseModal();
-
-      navigate("/vision");
+      setIsModalOpen(false);
+      // Only navigate if we are told to (Detail Page)
+      if (redirectOnDelete) navigate("/vision");
     } catch (error) {
       console.error("Delete failed:", error);
-      handleCloseModal();
+      setIsModalOpen(false);
     }
-  }, [dispatch, visionId, navigate, handleCloseModal]);
+  };
 
   return (
     <>
-      <button
-        onClick={handleOpenModal}
-        className="flex items-center space-x-2 text-sm px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 cursor-pointer"
-        disabled={loading}
-      >
-        {/* Trash Icon */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-trash-2"
-        >
-          <path d="M3 6h18" />
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-          <line x1="10" x2="10" y1="11" y2="17" />
-          <line x1="14" x2="14" y1="11" y2="17" />
-        </svg>
-
-        <span>{loading ? "Deleting..." : "Delete Vision"}</span>
-      </button>
+      {/* If 'children' exists, we render it inside this div. 
+         If not, we show the default big red button.
+      */}
+      <div onClick={handleOpenModal} className="w-full">
+        {children ? (
+          children
+        ) : (
+          <button className="flex items-center space-x-2 text-sm px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition">
+            <span className="material-symbols-outlined text-[18px]">
+              delete
+            </span>
+            <span>{loading ? "Deleting..." : "Delete Vision"}</span>
+          </button>
+        )}
+      </div>
 
       <ConfirmationModal
         isOpen={isModalOpen}
         title={vision.title}
-        onCancel={handleCloseModal}
+        onCancel={() => setIsModalOpen(false)}
         onConfirm={handleDelete}
         loading={loading}
       />

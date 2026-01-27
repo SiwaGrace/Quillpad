@@ -73,7 +73,7 @@ const App = () => {
 
       {/* 3. MAIN CONTENT */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="md:hidden flex items-center p-4 bg-white dark:bg-[#0c1817] ">
+        <header className="md:hidden flex items-center p-4  dark:bg-[#0c1817] ">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2">
             <HiOutlineMenuAlt1 />
           </button>
