@@ -50,39 +50,47 @@ const JournalPage = () => {
       {error && <p className="text-red-500">Error: {error}</p>}
 
       <div className="flex flex-col gap-6">
-        {entries?.length > 0 ? (
-          entries.map((entry) => {
-            const dateObj = new Date(entry.createdAt);
-            const month = dateObj
-              .toLocaleDateString("en-US", { month: "short" })
-              .toUpperCase();
-            const day = dateObj.getDate();
-            return (
-              <JournalEntryCard
-                key={entry._id}
-                id={entry._id}
-                title={entry.title}
-                month={month}
-                day={day}
-                date={new Date(entry.createdAt)
-                  .toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                  .toUpperCase()}
-                // excerpt={
-                //   entry.content.length > 100
-                //     ? entry.content.slice(0, 100) + "..."
-                //     : entry.content
-                // }
-                excerpt={entry.content?.replace(/<[^>]*>/g, "")}
-                visionLinked={!!entry.visionId}
-              />
-            );
-          })
-        ) : (
-          <p>No journal entries yet.</p>
+        {/* Only show entries OR 'No entries' if we are NOT loading and there is no error */}
+        {status !== "loading" && !error && (
+          <>
+            {entries?.length > 0 ? (
+              entries.map((entry) => {
+                const dateObj = new Date(entry.createdAt);
+                const month = dateObj
+                  .toLocaleDateString("en-US", { month: "short" })
+                  .toUpperCase();
+                const day = dateObj.getDate();
+                return (
+                  <JournalEntryCard
+                    key={entry._id}
+                    id={entry._id}
+                    title={entry.title}
+                    month={month}
+                    day={day}
+                    date={new Date(entry.createdAt)
+                      .toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                      .toUpperCase()}
+                    // excerpt={
+                    //   entry.content.length > 100
+                    //     ? entry.content.slice(0, 100) + "..."
+                    //     : entry.content
+                    // }
+                    excerpt={
+                      entry.content?.replace(/<[^>]*>/g, "").slice(0, 100) +
+                      "..."
+                    }
+                    visionLinked={!!entry.visionId}
+                  />
+                );
+              })
+            ) : (
+              <p>No journal entries yet.</p>
+            )}
+          </>
         )}
       </div>
     </div>
