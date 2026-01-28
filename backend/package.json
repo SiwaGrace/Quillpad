@@ -7,6 +7,10 @@
     "start": "node index.js",
     "dev": "nodemon ."
   },
+  "engines": {
+    "node": "20.x",
+    "yarn": ">=1.22.0"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",

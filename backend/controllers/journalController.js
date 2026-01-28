@@ -1,6 +1,6 @@
 const Journal = require("../models/Journal");
 const asyncHandler = require("express-async-handler");
-const Vision = require("../models/Vision");
+const Vision = require("../models/vision");
 const SubVision = require("../models/SubVision");
 
 // @desc    Create new journal
