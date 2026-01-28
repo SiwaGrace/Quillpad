@@ -26,10 +26,7 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 //
-const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://quillpad.vercel.app/", // Your future Vercel URL
-];
+const allowedOrigins = ["http://localhost:5173", "https://quillpad.vercel.app"];
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like (Postman, mobile apps or curl requests)
