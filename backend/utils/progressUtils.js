@@ -1,5 +1,5 @@
 // /utils/progressUtils.js
-const Vision = require("../models/Vision");
+const Vision = require("../models/vision");
 
 // Convert SubVision status → progress
 const subVisionProgressFromStatus = (status) => {
