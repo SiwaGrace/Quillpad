@@ -55,7 +55,6 @@ const router = createBrowserRouter(
       <Route path="forgotpass" element={<ForgotPassword />} />
       <Route path="reset-password/:token" element={<ResetPassword />} />
       <Route path="splashscreen" element={<SplashScreen />} />
-      <Route path="vv" element={<Visionfirst />} />
 
       {/* Layout pages (Navbar + Footer) */}
       <Route element={<App />}>

@@ -28,7 +28,7 @@ app.use(cookieParser());
 //
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://quillpad-b0ce.onrender.com", // Your future Vercel URL
+  "https://quillpad.vercel.app/", // Your future Vercel URL
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -50,6 +50,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// successful check
+app.get("/", (req, res) => {
+  res.send("API is running smoothly...");
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
