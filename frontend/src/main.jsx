@@ -36,7 +36,6 @@ import EditEntryPage from "./components/JournalComponents/EditEntryPage.jsx";
 import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
 import VisionBoard from "./pages/VisionBoard.jsx";
 import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
-import Visionfirst from "./components/whatever/visionfirst.jsx";
 import VisionDetails from "./components/VisionComponents/VisionDetails.jsx";
 import SubVisionInput from "./components/SubVision/SubVisionInput.jsx";
 import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
