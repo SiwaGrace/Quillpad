@@ -7,6 +7,8 @@ require("dotenv").config();
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 
+const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+
 // Generate JWT
 const generateToken = (id, email) => {
   const secret = process.env.JWT_SECRET;
@@ -48,9 +50,9 @@ const registerUser = asyncHandler(async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false, // set to true in production,
+        secure: true, // set to true in production,
+        sameSite: "none",
         // sameSite: "lax",
-        sameSite: "lax",
 
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       })
@@ -96,9 +98,9 @@ const loginUser = asyncHandler(async (req, res) => {
   res
     .cookie("token", token, {
       httpOnly: true,
-      secure: false, // change to true in production
+      secure: true, // change to true in production
+      sameSite: "none",
       // sameSite: "lax",
-      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     })
     .status(200)
@@ -115,8 +117,8 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false, // same as login
-    sameSite: "lax", // must match exactly
+    secure: true, // same as login
+    sameSite: "none", // must match exactly
   });
   res.status(200).json({ message: "Logged out successfully" });
 });
@@ -160,7 +162,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
   await user.save();
 
-  const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+  const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
   try {
     await sendEmail({
