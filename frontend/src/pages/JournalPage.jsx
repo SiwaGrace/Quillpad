@@ -7,11 +7,21 @@ import JournalEntryCard from "../components/JournalComponents/JournalEntryCard";
 import logo from "../assets/logo/quillpad_logo4.png";
 import { FaPlus } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
+import SearchBar from "../components/SearchBar";
+import { useState } from "react";
 
 const JournalPage = () => {
   const dispatch = useDispatch();
-  // const { id: visionId } = useParams();
   const { entries, status, error } = useSelector((state) => state.journal);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // search
+  const filteredEntries = entries?.filter(
+    (entry) =>
+      entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      entry.content?.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   useEffect(() => {
     dispatch(fetchJournals());
@@ -35,26 +45,22 @@ const JournalPage = () => {
         </Link>
       </div>
       {/* <!-- SearchBar --> */}
-      <div className="relative group mb-12">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <GoSearch className="group-focus-within:text-primary-400" />
-        </div>
-        <input
-          className="w-full h-14 pl-12 pr-4 bg-white dark:bg-slate-800/50 border-none rounded-xl font-sans text-base focus:ring-2 outline-none focus:ring-primary-400 shadow-sm"
-          placeholder="Search your thoughts..."
-          type="text"
+      <div className="mb-12">
+        <SearchBar
+          onSearch={(val) => setSearchQuery(val)}
+          placeholder="Search your journals..."
         />
       </div>
 
-      {status === "loading" && <p>Loading entries...</p>}
+      {status === "loading" && <p>Loading Journal...</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
 
       <div className="flex flex-col gap-6">
-        {/* Only show entries OR 'No entries' if we are NOT loading and there is no error */}
+        {/* Only show filteredEntries OR 'No filteredEntries' if we are NOT loading and there is no error */}
         {status !== "loading" && !error && (
           <>
-            {entries?.length > 0 ? (
-              entries.map((entry) => {
+            {filteredEntries?.length > 0 ? (
+              filteredEntries.map((entry) => {
                 const dateObj = new Date(entry.createdAt);
                 const month = dateObj
                   .toLocaleDateString("en-US", { month: "short" })

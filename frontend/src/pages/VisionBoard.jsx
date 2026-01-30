@@ -9,6 +9,7 @@ import VisionCardGrid from "../components/VisionComponents/VisionCardGrid";
 import StatusBadge from "../components/VisionComponents/StatusBadge";
 import { GoSearch } from "react-icons/go";
 import VisionListView from "../components/VisionComponents/VisionListView";
+import SearchBar from "../components/SearchBar";
 
 // --- Main Component ---
 const VisionBoard = () => {
@@ -16,6 +17,7 @@ const VisionBoard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [filter, setFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   // NEW STATE: Toggle between 'list' (table) and 'grid' (cards)
   const [viewMode, setViewMode] = useState("grid");
 
@@ -58,36 +60,41 @@ const VisionBoard = () => {
 
   // FILTERING LOGIC
   const filteredVisions = visions.filter((vision) => {
-    if (filter === "all") return true;
-
-    if (["in progress", "completed", "not started"].includes(filter)) {
-      return vision.status === filter;
+    // 1. First, check the dropdown filter (Status/Category)
+    let matchesFilter = true;
+    if (filter !== "all") {
+      if (["in progress", "completed", "not started"].includes(filter)) {
+        matchesFilter = vision.status === filter;
+      } else {
+        matchesFilter = vision.category === filter;
+      }
     }
+    // 2. Then, check the Search query (Title/Description)
+    const matchesSearch =
+      vision.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vision.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return vision.category === filter;
+    // 3. Only return true if BOTH are true
+    return matchesFilter && matchesSearch;
   });
   return (
     <div>
-      <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white dark:bg-[#0e1b19]/80 backdrop-blur-md border-b border-[#e8f3f2] dark:border-[#1e3230]">
+      <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white dark:bg-[#0e1b19]/80 backdrop-blur-md dark:border-[#1e3230]">
         {/* Search Bar Container */}
-        <div className="flex-1 max-w-xs md:max-w-xl transition-all duration-300">
-          <div className="relative group">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#50958f] text-[20px]">
-              search
-            </span>
-            <input
-              className="w-full pl-11 pr-4 py-2.5 bg-[#f0f5f5] dark:bg-[#1a2e2c] border-none rounded-xl focus:ring-2 focus:ring-[#4ce6d9]/50 text-sm placeholder:text-gray-400 dark:text-gray-200 transition-all"
-              placeholder="Search your visions..."
-              type="text"
-            />
-          </div>
+        <div className="flex-1 max-w-md">
+          {" "}
+          {/* Prevents it from getting too wide on desktop */}
+          <SearchBar
+            onSearch={(val) => setSearchQuery(val)}
+            placeholder="Search your visions..."
+          />
         </div>
 
         {/* Actions Area */}
-        <div className="flex items-center gap-2 md:gap-4 ml-3 md:ml-6">
-          {/* Notification Button - Hidden on very small screens or kept as icon */}
-          <button className="hidden sm:flex w-10 h-10 items-center justify-center rounded-xl bg-[#e8f3f2] dark:bg-[#1a2e2c] text-[#0e1b19] dark:text-white hover:bg-[#d8e8e6] dark:hover:bg-[#243f3c] transition-colors">
-            <span className="material-symbols-outlined text-[22px]">
+        <div className="flex items-center gap-2 md:gap-4 ml-3 md:ml-6 ">
+          {/* Notification Button - Hidden on very small screens or kept as icon sm:flex*/}
+          <button className="hidden  w-10 h-10 items-center justify-center rounded-xl bg-[#e8f3f2] dark:bg-[#1a2e2c] text-[#0e1b19] dark:text-white hover:bg-[#d8e8e6] dark:hover:bg-[#243f3c] transition-colors">
+            <span className="material-symbols-outlined text-[22px]  ">
               notifications
             </span>
           </button>
@@ -108,7 +115,7 @@ const VisionBoard = () => {
           All Visions ({filteredVisions.length})
         </h1>
 
-        {/* Search and View Toggle */}
+        {/*  View Toggle */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           {/* Branding / Tagline */}
           <div>
@@ -190,9 +197,15 @@ const VisionBoard = () => {
       {!loading && !error && filteredVisions.length === 0 && (
         <div className="text-center py-12 bg-white rounded-lg shadow-lg mt-8">
           <p className="text-xl font-semibold text-gray-600 mb-4">
-            No visions found matching the criteria.
+            No Visions Found
           </p>
-          <button className="text-teal-600 hover:text-teal-800 font-medium">
+          <button
+            onClick={() => {
+              setFilter("all");
+              setSearchQuery("");
+            }}
+            className="text-teal-600 hover:text-teal-800 font-medium"
+          >
             Clear filters or start a new vision!
           </button>
         </div>
