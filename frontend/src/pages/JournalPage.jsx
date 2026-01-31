@@ -53,7 +53,11 @@ const JournalPage = () => {
         />
       </div>
 
-      {status === "loading" && <p>Loading Journal...</p>}
+      {status === "loading" && (
+        <div className="text-center py-12">
+          <p className="text-xl text-teal-600">Loading Journals...</p>
+        </div>
+      )}
       {error && <p className="text-red-500">Error: {error}</p>}
 
       <div className="flex flex-col gap-6">
