@@ -42,6 +42,8 @@ import SubVisionDetail from "./components/SubVision/SubVisionDetail.jsx";
 import SubVisionList from "./components/SubVision/SubvisonList.jsx";
 import SubVisionEdit from "./components/SubVision/SubVisionEdit.jsx";
 import VisionEdit from "./components/VisionComponents/VisionEdit.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
+import Profile from "./pages/Settings/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -72,6 +74,24 @@ const router = createBrowserRouter(
           element={
             <PrivateRoute>
               <About />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="settings"
+          element={
+            <PrivateRoute>
+              <Settings />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

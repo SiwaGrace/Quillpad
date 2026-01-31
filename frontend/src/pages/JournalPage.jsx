@@ -6,7 +6,8 @@ import JournalEntryCard from "../components/JournalComponents/JournalEntryCard";
 
 import logo from "../assets/logo/quillpad_logo4.png";
 import { FaPlus } from "react-icons/fa";
-import { GoSearch } from "react-icons/go";
+import { MdHistoryEdu } from "react-icons/md";
+
 import SearchBar from "../components/SearchBar";
 import { useState } from "react";
 
@@ -94,7 +95,12 @@ const JournalPage = () => {
                 );
               })
             ) : (
-              <p>No journal entries yet.</p>
+              <div className="p-10 text-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
+                <MdHistoryEdu className="mx-auto text-gray-300 dark:text-gray-700 text-4xl mb-2" />
+                <p className="text-gray-500 dark:text-gray-400">
+                  No entries found. Your journey is waiting to be written.
+                </p>
+              </div>
             )}
           </>
         )}

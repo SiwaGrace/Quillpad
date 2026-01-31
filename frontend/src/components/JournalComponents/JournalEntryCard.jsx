@@ -8,6 +8,7 @@ import {
   PiEyeLight,
   PiDotsThreeVerticalBold,
 } from "react-icons/pi";
+import toast from "react-hot-toast";
 
 const JournalEntryCard = ({
   id,
@@ -23,9 +24,33 @@ const JournalEntryCard = ({
 
   const handleDelete = () => {
     setShowMenu(false);
-    if (window.confirm("Delete this entry forever?")) {
-      dispatch(removeJournal(id));
-    }
+
+    toast(
+      (t) => (
+        <span className="flex items-center gap-4">
+          <span className="text-sm font-medium">Delete this entry?</span>
+          <button
+            onClick={() => {
+              dispatch(removeJournal(id));
+              toast.dismiss(t.id);
+              toast.success("Entry removed from sanctuary.");
+            }}
+            className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs font-bold hover:bg-red-600 transition-colors"
+          >
+            Confirm
+          </button>
+        </span>
+      ),
+      {
+        duration: 4000,
+        style: {
+          background: "#1a2e2a", // Matches your dark green theme
+          color: "#fff",
+          borderRadius: "12px",
+          border: "1px solid #2a453f",
+        },
+      },
+    );
   };
 
   return (
