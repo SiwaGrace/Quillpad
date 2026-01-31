@@ -24,9 +24,6 @@ const VisionsDataEntries = ({ logoLeaf }) => {
   return (
     <>
       <div className="space-y-6">
-        {/* Capture Vision */}
-        <div className="bg-white p-6 rounded-xl shadow-sm"></div>
-
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6 px-1">
             <h2 className="text-xl font-bold tracking-tight">Your Visions</h2>

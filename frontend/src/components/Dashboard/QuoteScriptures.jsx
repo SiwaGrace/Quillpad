@@ -15,7 +15,7 @@ const QuoteScriptures = () => {
     <div>
       {/* Stats Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-        <div className="lg:col-span-2 p-8 rounded-xl bg-white dark:bg-[#1a2e2c] shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-center min-h-[220px]">
+        <div className="lg:col-span-3 p-8 rounded-xl bg-white dark:bg-[#1a2e2c] shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-center min-h-[220px]">
           <RiDoubleQuotesR className="text-primary-400 w-10 h-10 " />
           <blockquote className="serif-text text-2xl leading-relaxed text-[#0e1b19] dark:text-gray-100 italic mb-4">
             {prompt.prompt}
@@ -27,8 +27,8 @@ const QuoteScriptures = () => {
             )}
           </cite>
         </div>
-
-        <div className="p-8 rounded-xl bg-white dark:bg-[#1a2e2c] shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center">
+        {/* streak */}
+        {/* <div className="p-8 rounded-xl bg-white dark:bg-[#1a2e2c] shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center">
           <div className="relative size-32 mb-4 flex items-center justify-center">
             <svg className="size-full -rotate-90" viewBox="0 0 36 36">
               <circle
@@ -62,7 +62,7 @@ const QuoteScriptures = () => {
           <p className="text-sm text-primary-400 font-medium">
             You're building a habit
           </p>
-        </div>
+        </div> */}
       </div>
       {/* Scripture */}
       <div className="bg-gradient-to-br from-[#c7f0ec]  to-[#04fae1]  p-6 rounded-xl shadow-sm mb-12">
