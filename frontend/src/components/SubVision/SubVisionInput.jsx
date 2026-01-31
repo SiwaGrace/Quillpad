@@ -45,7 +45,7 @@ const SubVisionInput = () => {
             placeholder="Enter the sub-vision title"
             value={form.title}
             onChange={handleChange}
-            className="w-full border p-2 rounded focus:ring-2 focus:ring-teal-500"
+            className="w-full p-2 rounded border border-gray-200 outline-none focus:ring-2 focus:ring-teal-500"
             required
           />
         </div>
@@ -60,7 +60,7 @@ const SubVisionInput = () => {
             placeholder="Describe this sub-vision"
             value={form.description}
             onChange={handleChange}
-            className="w-full border p-2 rounded focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-200 outline-none p-2 rounded focus:ring-2 focus:ring-teal-500"
             rows={4}
           />
         </div>

@@ -9,10 +9,10 @@ export const login = createAsyncThunk(
       return await loginUser(credentials);
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Login failed"
+        error.response?.data?.message || "Login failed",
       );
     }
-  }
+  },
 );
 
 // REGISTER
@@ -23,10 +23,10 @@ export const register = createAsyncThunk(
       return await registerUser(userData);
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Register failed"
+        error.response?.data?.message || "Register failed",
       );
     }
-  }
+  },
 );
 
 // GET LOGGED-IN USER
@@ -55,7 +55,18 @@ const authSlice = createSlice({
     authChecked: false, // 🔑 key fix
   },
 
-  reducers: {},
+  reducers: {
+    // Call this as soon as the user starts typing
+    clearAuthError: (state) => {
+      state.error = null;
+    },
+    // Call this for front-end validation (e.g., "Passwords don't match")
+    setAuthError: (state, action) => {
+      state.error = action.payload;
+      state.loginLoading = false;
+      state.registerLoading = false;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -114,5 +125,5 @@ const authSlice = createSlice({
       });
   },
 });
-
+export const { clearAuthError, setAuthError } = authSlice.actions;
 export default authSlice.reducer;

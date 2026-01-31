@@ -48,23 +48,22 @@ const SubVisionItem = ({ subVision }) => {
         </div>
 
         {/* Content Area */}
-        <Link
-          to={`/visions/${visionId}/subvision/${subVision._id}`}
-          className="flex-1 min-w-0"
-        >
+        <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start gap-2">
-            <p
-              className={`text-sm font-bold truncate transition-colors ${
-                isCompleted
-                  ? "text-slate-400 line-through decoration-primary-400/30"
-                  : "text-[#0d1c1b] dark:text-white"
-              }`}
-            >
-              {subVision.title}
-            </p>
+            <Link to={`/visions/${visionId}/subvision/${subVision._id}`}>
+              <p
+                className={`text-sm font-bold truncate transition-colors ${
+                  isCompleted
+                    ? "text-slate-400 line-through decoration-primary-400/30"
+                    : "text-[#0d1c1b] dark:text-white"
+                }`}
+              >
+                {subVision.title}
+              </p>
+            </Link>
 
             {/* Hover Actions (Hidden until hover) */}
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
               <Link
                 to={`/visions/${visionId}/subvision/${subVision._id}/edit`}
                 className="p-1 text-slate-400 hover:text-primary-400 transition-colors"
@@ -108,7 +107,7 @@ const SubVisionItem = ({ subVision }) => {
               </p>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   );
