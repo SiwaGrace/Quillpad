@@ -4,6 +4,7 @@ import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import { useState } from "react";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -86,6 +87,7 @@ const App = () => {
           </div>
         </main>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

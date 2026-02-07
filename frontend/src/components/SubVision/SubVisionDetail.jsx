@@ -58,7 +58,7 @@ const SubVisionDetail = () => {
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8">
+    <div className="max-w-4xl mx-auto  md:p-8">
       {/* Top Navigation */}
       <button
         onClick={() => navigate(`/visions/${visionId}`)}
@@ -68,9 +68,9 @@ const SubVisionDetail = () => {
         Back to Vision
       </button>
 
-      <div className="bg-white dark:bg-[#142d2a] rounded-3xl border border-slate-200 dark:border-[#1a3b38] overflow-hidden shadow-xl shadow-primary-400/5">
+      <div className="bg-white dark:bg-[#142d2a] rounded-3xl border border-slate-200  overflow-hidden shadow-xl shadow-primary-400/5">
         {/* Header Section */}
-        <div className="p-8 border-b border-slate-100 dark:border-[#1a3b38] bg-slate-50/50 dark:bg-slate-800/20">
+        <div className="py-8 px-4 border-b border-slate-100  bg-slate-50/50 dark:bg-slate-800/20">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
@@ -102,7 +102,7 @@ const SubVisionDetail = () => {
                 visionId,
                 subVisionId: subId,
               }}
-              className="flex items-center gap-2 bg-primary-400 text-slate-900 px-6 py-3 rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary-400/20"
+              className="flex items-center gap-2 bg-primary-400 text-white px-6 py-3 rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary-400/20"
             >
               <span className="material-symbols-outlined text-lg">
                 edit_note
@@ -160,9 +160,9 @@ const SubVisionDetail = () => {
               subVisionJournals.map((j) => (
                 <div
                   key={j._id}
-                  className="group relative pl-6 border-l-2 border-slate-100 dark:border-[#1a3b38] hover:border-primary-400 transition-colors pb-6"
+                  className="group relative pl-6 border-l-2 border-slate-100  hover:border-primary-400 transition-colors pb-6"
                 >
-                  <div className="absolute -left-[9px] top-0 size-4 rounded-full bg-white dark:bg-[#142d2a] border-2 border-slate-200 dark:border-[#1a3b38] group-hover:border-primary-400 transition-colors" />
+                  <div className="absolute -left-[9px] top-0 size-4 rounded-full bg-white dark:bg-[#142d2a] border-2 border-slate-200  group-hover:border-primary-400 transition-colors" />
                   <div className="bg-slate-50 dark:bg-[#0e1b19]/40 p-5 rounded-2xl border border-transparent hover:border-primary-400/20 transition-all">
                     <div className="flex justify-between items-start">
                       <h4 className="font-bold text-slate-800 dark:text-slate-200">
@@ -183,7 +183,7 @@ const SubVisionDetail = () => {
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 border-2 border-dashed border-slate-100 dark:border-[#1a3b38] rounded-3xl">
+              <div className="text-center py-12 border-2 border-dashed border-slate-100  rounded-3xl">
                 <span className="material-symbols-outlined text-4xl text-slate-200 mb-2">
                   auto_stories
                 </span>

@@ -79,7 +79,7 @@ const VisionBoard = () => {
   });
   return (
     <div>
-      <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white dark:bg-[#0e1b19]/80 backdrop-blur-md dark:border-[#1e3230]">
+      <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white backdrop-blur-md">
         {/* Search Bar Container */}
         <div className="flex-1 max-w-md">
           {" "}

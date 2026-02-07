@@ -34,7 +34,7 @@ const Dashboard = () => {
         <Link to="/createvision" state={{ from: location.pathname }}>
           <button className="bg-linear-to-b from-primary-400 to-primary-600 text-white font-semibold px-6 py-2 rounded-full shadow hover:opacity-90 transition flex items-center justify-between cursor-pointer">
             <img src={logoLeaf} alt="logo" className="h-7" />
-            <p className="shrink-0">New Entry</p>
+            <p className="hidden sm:flex shrink-0">New Entry</p>
           </button>
         </Link>
       </header>
