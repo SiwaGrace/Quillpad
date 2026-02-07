@@ -13,18 +13,21 @@ const LandingPNavbar = () => (
         </h2>
       </div>
       <div className="flex items-center gap-8">
-        <div className="hidden md:flex gap-8 text-sm font-medium">
+        <div className="flex gap-8 text-sm font-medium">
           {/* <Link to="/" className="hover:text-primary transition-colors">
             Features
           </Link> */}
 
-          <Link to="/login" className="hover:text-primary transition-colors">
+          <Link
+            to="/login"
+            className="hover:text-[#45a19c] transition-colors underline"
+          >
             Login
           </Link>
         </div>
         <Link
           to="/register"
-          className="rounded-full bg-primary-500 px-6 py-2.5 text-white text-sm font-bold shadow-lg shadow-primary-400 hover:scale-105 transition-transform active:scale-95"
+          className="hidden md:flex rounded-full bg-primary-500 px-6 py-2.5 text-white text-sm font-bold shadow-lg shadow-primary-400 hover:scale-105 transition-transform active:scale-95"
         >
           Get Started
         </Link>

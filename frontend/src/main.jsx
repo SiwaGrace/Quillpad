@@ -33,7 +33,6 @@ import NewEntryPage from "./components/JournalComponents/NewEntryPage.jsx";
 import JournalDetailPage from "./components/JournalComponents/JournalDetailPage.jsx";
 import EditEntryPage from "./components/JournalComponents/EditEntryPage.jsx";
 
-import SplashScreen from "./components/Dashboard/SplashScreen.jsx";
 import VisionBoard from "./pages/VisionBoard.jsx";
 import CaptureVision from "./components/Dashboard/CaptureVision.jsx";
 import VisionDetails from "./components/VisionComponents/VisionDetails.jsx";
@@ -55,7 +54,6 @@ const router = createBrowserRouter(
       <Route path="register" element={<RegisterPage />} />
       <Route path="forgotpass" element={<ForgotPassword />} />
       <Route path="reset-password/:token" element={<ResetPassword />} />
-      <Route path="splashscreen" element={<SplashScreen />} />
 
       {/* Layout pages (Navbar + Footer) */}
       <Route element={<App />}>

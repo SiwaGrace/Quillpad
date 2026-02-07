@@ -98,22 +98,22 @@ const AuthForm = ({
   }, [user, isSubmitting, error, navigate, from]);
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="bg-background-light  min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-[440px] flex flex-col items-center">
         {/* logo area */}
         <div className="mb-8 flex flex-col items-center gap-2">
           <div className="text-primary size-10">
             <img src={logo} alt="app logo" className=" " />
           </div>
-          <h2 className="text-[#0d1b18] dark:text-white text-xl font-bold leading-tight tracking-tight">
+          <h2 className="text-[#0d1b18]  text-xl font-bold leading-tight tracking-tight">
             QuillPad
           </h2>
         </div>
         {/* card */}
-        <div className="bg-white dark:bg-[#1a2e2a] w-full rounded-lg shadow-sm border border-[#d9d9d9] dark:border-[#2a453f] p-8 md:p-10">
+        <div className="bg-white  w-full rounded-lg shadow-sm border border-[#d9d9d9]  p-8 md:p-10">
           {/* <!-- Header Text --> */}
           <div className="text-center mb-8">
-            <h1 className="serif-heading text-[#0d1b18] dark:text-white text-[32px] font-semibold leading-tight mb-2">
+            <h1 className="serif-heading text-[#0d1b18]  text-[32px] font-semibold leading-tight mb-2">
               {title}
             </h1>
             <p className="text-[#4c9a86] text-sm">{desc}</p>
@@ -124,17 +124,15 @@ const AuthForm = ({
             {" "}
             {/* Fixed height prevents layout jump */}
             {error && (
-              <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 rounded-xl animate-shake">
+              <div className="flex items-start gap-3 bg-red-50  border border-red-200  p-4 rounded-xl animate-shake">
                 <span className="material-symbols-outlined text-red-500 text-xl">
                   warning
                 </span>
                 <div className="flex-1">
-                  <h4 className="text-sm font-bold text-red-700 dark:text-red-400">
+                  <h4 className="text-sm font-bold text-red-700 ">
                     Something went wrong
                   </h4>
-                  <p className="text-xs text-red-600 dark:text-red-400/80 mt-0.5">
-                    {error}
-                  </p>
+                  <p className="text-xs text-red-600  mt-0.5">{error}</p>
                 </div>
                 <button
                   onClick={() => dispatch(clearAuthError())}
@@ -160,7 +158,7 @@ const AuthForm = ({
 
               return (
                 <div key={field.name} className="flex flex-col gap-1.5">
-                  <label className="text-[#0d1b18] dark:text-gray-200 text-sm font-medium px-1">
+                  <label className="text-[#0d1b18]  text-sm font-medium px-1">
                     {field.label}
                   </label>
                   <input
@@ -170,8 +168,8 @@ const AuthForm = ({
                     onChange={handleChange}
                     placeholder={field.placeholder}
                     // 2. Highlighting the specific input on error
-                    className={`w-full h-12 rounded-xl border bg-transparent px-4 outline-none transition-all dark:text-white placeholder:text-gray-400
-                ${isFieldInvalid ? "border-red-300 dark:border-red-900 focus:ring-red-500" : "border-[#d9d9d9] dark:border-[#2a453f] focus:ring-[#13ecb6]"}`}
+                    className={`w-full h-12 rounded-xl border bg-transparent px-4 outline-none transition-all  placeholder:text-gray-400
+                ${isFieldInvalid ? "border-red-300  focus:ring-red-500" : "border-[#d9d9d9]  focus:ring-[#13ecb6]"}`}
                     required
                   />
                 </div>
@@ -238,7 +236,7 @@ const AuthForm = ({
         </div>
         {/* <!-- Bottom Disclaimer --> */}
         <div className="mt-12 text-center max-w-[400px]">
-          <p className="text-[11px] leading-relaxed text-background-400 dark:text-white/30 uppercase tracking-widest">
+          <p className="text-[11px] leading-relaxed text-background-400  uppercase tracking-widest">
             Your entries are encrypted &amp; private. By signing up, you agree
             to our Terms of Sanctuary.
           </p>

@@ -9,7 +9,7 @@ const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-[#0e1b19] dark:text-gray-100">
+    <div className="flex h-screen overflow-hidden bg-background-light text-[#0e1b19] ">
       <Helmet>
         <title>Quillpad — Write, Edit & Publish Smarter</title>
         <meta
@@ -48,7 +48,7 @@ const App = () => {
         <meta name="twitter:image" content="/quillpad-preview.png" />
       </Helmet>
       {/* 1. DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0c1817] p-6">
+      <aside className="hidden md:flex w-64 border-r border-gray-200  bg-white p-6">
         <Navigation />
       </aside>
 
@@ -61,7 +61,7 @@ const App = () => {
       />
 
       <aside
-        className={`fixed left-4 top-4 bottom-4 z-50 w-64 bg-white dark:bg-[#0c1817] rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 transform transition-transform duration-300 md:hidden ${
+        className={`fixed left-4 top-4 bottom-4 z-50 w-64 bg-white  rounded-2xl shadow-2xl border border-gray-100  transform transition-transform duration-300 md:hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-[110%]"
         }`}
       >
@@ -73,7 +73,7 @@ const App = () => {
 
       {/* 3. MAIN CONTENT */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="md:hidden flex items-center p-4  dark:bg-[#0c1817] ">
+        <header className="md:hidden flex items-center p-4  ">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2">
             <HiOutlineMenuAlt1 />
           </button>

@@ -11,39 +11,39 @@
   --space-3: 16px;
   --space-4: 24px;
   --space-5: 32px;
+
   /* Font variables for consistency */
   --font-body: "Inter", sans-serif;
   --font-heading: "Source Serif Pro", serif;
   --font-accent: "Merriweather", serif;
   --font-script: "Dancing Script", cursive;
+  --font-date: "Source Serif Pro", serif; /* Date specific */
 
-  /* Date specific */
-  --font-date: "Source Serif Pro", serif;
-}
+  /* MY CUSTOMS */
+  /* Font variables for consistency */
+  /* --font-body: "Inter", sans-serif;
+  --fontHeading: "Montserrat", sans-serif;
 
-/* Body text - clean and readable */
-body {
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
-  color: #1f2937;
-  line-height: 1.6 – 1.8;
-}
-
-/* Headings - elegant and classic */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  /* font-family: "Merriweather", serif; */
-  font-family: "Source Serif Pro", serif;
-  font-weight: 700;
-  /* color: #111827; */
-  margin-bottom: 0.5em;
+  --primaryColor: #ffffff;
+  --secondaryColor: #ee2b8c;
+  --accentColor: #ff2d55;
+  --primaryText: #000000;
+  --secondaryText: #666666;
+  --dividerBorder: #c41616; */
 }
 
 @theme {
+  /* --color-primaryColor: var(--primaryColor); background */
+  /* --color-secondaryColor: var(--secondaryColor); surfaces */
+  /* --color-accentColor: var(--accentColor); brand */
+  /* --color-primaryText: var(--primaryText); headings */
+  /* --color-secondaryText: var(--secondaryText); descriptions */
+  /* ---color-dividerBorder: var(--dividerBorder); */
+
+  /* font */
+  /* --font-fontHeading: var(--fontHeading); */
+
+  /* ----------------------------------------- */
   /* --- Primary Brand Color (Teal) --- */
   --color-primary-400: oklch(0.7 0.11 169); /* Nearest to #14B8A6 (Light) */
 
@@ -73,13 +73,6 @@ h6 {
   /* --- Background & Surfaces --- */
   --color-surface-bg: oklch(0.95 0 0); /* Nearest to #F5F5F5 */
   --color-border-light: oklch(0.85 0 0); /* Nearest to #E5E7EB */
-
-  /*------------
-  ---------- 
-  dark 
-  ----------
-  ------------*/
-  /* "background-dark": "#0f2322", */
 
   /*-------
   ----------
@@ -121,6 +114,27 @@ h6 {
       transform: translate3d(4px, 0, 0);
     }
   }
+}
+
+/* Body text - clean and readable */
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: #1f2937;
+  line-height: 1.6 – 1.8;
+}
+
+/* Headings - elegant and classic */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  /* font-family: "Merriweather", serif; */
+  font-family: "Source Serif Pro", serif;
+  font-weight: 700;
+  margin-bottom: 0.5em;
 }
 
 /* Hide scrollbar but keep scroll functionality */
