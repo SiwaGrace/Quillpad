@@ -1,83 +1,101 @@
-🪶 Quillpad — Personal Journal App
+🪶 Quillpad — Vision & Personal Growth App
 
-Quillpad is a full-stack journal web app designed for self-reflection, creativity, and personal growth.
-Users can write, edit, and delete journal entries, track their moods, view insights, and visualize their writing habits — all in one intuitive, beautifully designed space.
+Quillpad is a full-stack personal growth web app designed to help users clarify their vision, reflect on their journey, and track their progress over time.
+It combines journaling, goal-setting, and self-awareness tools in one beautifully designed, intuitive space.
+
+Quillpad is built for people who want to think clearly, grow intentionally, and document their life journey.
 
 🚀 Tech Stack
+Frontend
+React
+Vite
+Tailwind CSS
+Backend
+Node.js
+Express.js
+MongoDB
 
-Frontend: React, Vite, Tailwind CSS
-Backend: Node.js, Express.js, MongoDB
-Authentication: JWT (JSON Web Tokens)
-State Management: Redux Toolkit
-Other Tools: Axios, dotenv, bcryptjs
+Other Tools
+Redux Toolkit (state management)
+JWT (authentication)
+Axios
+bcryptjs
+dotenv
 
-🎯 Core Journal Functionality
+🎯 Core Features
 
-These are the core features that make Quillpad a complete journaling experience:
+These are the main features that power Quillpad:
 
-✍️ Create, View, Edit, Delete Entries — Manage your personal thoughts and reflections easily.
+✍️ Journaling
+Create, view, edit, and delete personal entries.
+Each entry is automatically timestamped.
+Search and filter entries by keywords or date.
 
-🔒 User Authentication — Secure sign-up, login, and logout using JWT.
+🎯 Vision & Growth
+Reflect on goals, ideas, and life direction.
+Use Quillpad as a digital space for clarity and planning.
+Track personal insights over time.
 
-🧭 Dashboard View — See your latest journal entries at a glance.
+🔒 Authentication
 
-🗓️ Date Tracking — Each entry automatically logs the date of creation and update.
+Secure sign-up and login using JWT.
+Private, user-specific data.
 
-🗂️ Filter & Search — Quickly find past entries by keyword or date.
+🧭 Dashboard
+
+Overview of recent entries.
+Quick access to your reflections and ideas.
 
 ⚙️ Setup & Installation
-
 Clone the repository
-
 git clone https://github.com/yourusername/quillpad.git
 cd quillpad
 
 Install dependencies
 
-# install backend dependencies
+Backend:
 
-cd backend && npm install
+cd backend
+yarn install
 
-# install frontend dependencies
 
-cd ../frontend && npm install
+Frontend:
 
-Set up environment variables
-In both /backend and /frontend folders, create a .env file with:
+cd ../frontend
+yarn install
+
+Environment Variables
+
+Create a .env file in both /backend and /frontend:
 
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret_key
 VITE_API_URL=http://localhost:5000/api
 
-Run the app
+Run the App
 
-npm run dev
-
-or (if using Yarn)
-
+From the root directory of the project:
+yarn install
 yarn dev
 
-🧪 Dev Notes
+🧪 Development Tip
 
-If you don’t want to log in repeatedly during testing, use:
+To skip authentication during development:
 
 const isDev = import.meta.env.VITE_ENV === "development";
 
-to skip login during development and re-enable it for production.
+This helps speed up testing and can be disabled in production.
 
-📌 Roadmap
+🗺️ Roadmap (Vision Direction)
 
-Add Calendar & Stats Pages
-
-Integrate Mood Tracking
-
-Add Export as PDF Feature
-
-Implement Public/Private Journal Modes
-
-Polish UI animations
+Planned features for future versions:
+📅 Calendar & Activity Stats
+😊 Mood & Emotion Tracking
+📄 Export Entries as PDF
+🌍 Public / Private Vision Modes
+✨ Advanced UI animations & micro-interactions
+🎯 Dedicated Goals & Habits System
 
 🧑‍💻 Author
-
-Grace Esime Djobokou
-Frontend & Fullstack Developer
+SiwaGrace
+Grace Esime Djobokou -> Frontend & Full-stack Developer
