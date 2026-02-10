@@ -1,4 +1,12 @@
 .env
 node_modules
 services
-utils/testEmail.js
+
+# for testing email sending functionality, not needed in production via brevo smtp which only works in development
+utils/testEmail.js 
+
+# for sending emails, not needed in production
+utils/sendEmail.js 
+
+# for testing brevo API connection and email sending, not needed in production
+utils/testBrevo.js

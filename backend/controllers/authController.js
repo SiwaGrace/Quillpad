@@ -54,19 +54,10 @@ const registerUser = asyncHandler(async (req, res) => {
     const token = generateToken(user._id, user.email);
 
     // ✅ Send welcome email
-    try {
-      await sendEmail({
-        to: user.email,
-        subject: "Welcome to Quillpad!",
-        html: `
-      <h1>Welcome, ${user.username}!</h1>
-      <p>Thank you for joining Quillpad. We’re excited to have you onboard!</p>
-    `,
-      });
-      console.log("✅ Welcome email sent successfully!");
-    } catch (err) {
-      console.error("❌ Welcome email failed:", err);
-    }
+    // Fire and forget (do NOT block registration)
+    sendWelcomeEmail(user.email, user.username).catch((err) =>
+      console.error("Email failed:", err.message),
+    );
 
     // Set cookie
     res
