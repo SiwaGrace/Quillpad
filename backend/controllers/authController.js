@@ -5,7 +5,7 @@ const asyncHandler = require("express-async-handler");
 require("dotenv").config();
 
 const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
+const { sendWelcomeEmail } = require("brevoEmail");
 
 const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 
