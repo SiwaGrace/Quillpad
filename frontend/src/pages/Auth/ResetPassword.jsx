@@ -1,31 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { resetPassword, clearAuthError } from "../../features/authSlices";
 
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { message, error, resetPasswordLoading } = useSelector(
+    (state) => state.auth,
+  );
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [localMessage, setLocalMessage] = useState("");
+  const [localError, setLocalError] = useState("");
+
+  useEffect(() => {
+    setLocalMessage(message || "");
+    setLocalError(error || "");
+  }, [message, error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const res = await axios.post(
-        `http://localhost:4000/api/auth/reset-password/${token}`,
-        { password }
-      );
-      setMessage(res.data.message);
-      setError("");
-      setTimeout(() => navigate("/login"), 1000); // redirect to login after 2s
+      await dispatch(resetPassword({ token, newPassword: password })).unwrap();
+      setPassword("");
+      setTimeout(() => navigate("/login"), 1000); // redirect to login after 1s
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
-      setMessage("");
+      // error already set in slice
     } finally {
-      setLoading(false);
     }
   };
 
@@ -33,14 +35,14 @@ const ResetPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       {/* Toaster messages */}
       <div className="fixed top-4 right-4 space-y-2 z-50">
-        {message && (
+        {localMessage && (
           <div className="bg-green-500 text-white px-4 py-2 rounded shadow-lg animate-slide-in">
-            {message}
+            {localMessage}
           </div>
         )}
-        {error && (
+        {localError && (
           <div className="bg-red-500 text-white px-4 py-2 rounded shadow-lg animate-slide-in">
-            {error}
+            {localError}
           </div>
         )}
       </div>
@@ -61,7 +63,11 @@ const ResetPassword = () => {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                dispatch(clearAuthError());
+                setLocalError("");
+              }}
               placeholder="Enter new password"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -70,10 +76,10 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={resetPasswordLoading}
             className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center"
           >
-            {loading ? (
+            {resetPasswordLoading ? (
               <>
                 <svg
                   className="animate-spin h-5 w-5 mr-2 text-white"
