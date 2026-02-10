@@ -208,7 +208,7 @@ const AuthForm = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-[#13ecb6] hover:bg-opacity-90 text-[#0d1b18] font-bold h-12 rounded-lg transition-all shadow-sm active:scale-[0.98] mt-2 
+              className={`w-full bg-[#13ecb6] hover:bg-opacity-90 text-[#0d1b18] font-bold h-12 rounded-lg transition-all shadow-sm active:scale-[0.98] cursor-pointer mt-2 
     ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {isSubmitting ? (
