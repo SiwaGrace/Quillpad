@@ -4,35 +4,15 @@ dotenv.config();
 
 const createTransporter = async () => {
   console.log("--- Initializing Transporter ---");
-  console.log("Current NODE_ENV:", process.env.NODE_ENV);
+  console.log("Using Ethereal (Nodemailer Test) Mode");
 
-  if (process.env.NODE_ENV === "development") {
-    console.log("Using Ethereal (Development) Mode");
-    const testAccount = await nodemailer.createTestAccount();
-
-    return nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      auth: { user: testAccount.user, pass: testAccount.pass },
-    });
-  }
-
-  console.log("Using Brevo (Production) Mode");
-  console.log("Target Host:", process.env.BREVO_SMTP_HOST);
-  console.log("Target User:", process.env.BREVO_SMTP_USER);
+  const testAccount = await nodemailer.createTestAccount();
 
   return nodemailer.createTransport({
-    host: process.env.BREVO_SMTP_HOST,
-    port: parseInt(process.env.BREVO_SMTP_PORT) || 465,
+    host: "smtp.ethereal.email",
+    port: 587,
     secure: false,
-    auth: {
-      user: process.env.BREVO_SMTP_USER,
-      pass: process.env.BREVO_SMTP_PASS,
-    },
-    // Adding a timeout so it doesn't hang forever
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
+    auth: { user: testAccount.user, pass: testAccount.pass },
   });
 };
 
@@ -52,9 +32,7 @@ const sendEmail = async ({ to, subject, html }) => {
     console.log("✅ Message sent successfully!");
     console.log("Message ID:", info.messageId);
 
-    if (process.env.NODE_ENV === "development") {
-      console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
-    }
+    console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
 
     return info;
   } catch (error) {

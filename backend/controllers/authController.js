@@ -5,7 +5,10 @@ const asyncHandler = require("express-async-handler");
 require("dotenv").config();
 
 const crypto = require("crypto");
-const { sendWelcomeEmail } = require("../utils/brevoEmail");
+const {
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+} = require("../utils/brevoEmail");
 
 const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 
@@ -178,12 +181,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
   try {
-    console.log("Attempting to send forgot-password email...");
-    await sendEmail({
-      to: user.email,
-      subject: "Password Reset Request",
-      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`,
-    });
+    console.log("Attempting to send forgot-password email via Brevo...");
+    await sendPasswordResetEmail(user.email, user.username, resetUrl);
 
     res.json({ message: "Reset link sent to your email" });
   } catch (error) {
