@@ -24,7 +24,7 @@ const createTransporter = async () => {
 
   return nodemailer.createTransport({
     host: process.env.BREVO_SMTP_HOST,
-    port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
+    port: parseInt(process.env.BREVO_SMTP_PORT) || 465,
     secure: false,
     auth: {
       user: process.env.BREVO_SMTP_USER,

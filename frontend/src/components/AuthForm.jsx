@@ -87,7 +87,13 @@ const AuthForm = ({
       return;
     }
 
-    dispatch(authAction(formData));
+    // added this because brevo won't give response: cause render was blocking port 587. but can remove this in the future when we have a better email service or if brevo fixes this issue
+    try {
+      const result = await dispatch(authAction(formData)).unwrap();
+      console.log("Register result:", result);
+    } catch (err) {
+      console.error("Register failed:", err);
+    }
   };
 
   // 🔥 Navigate after successful login/register
