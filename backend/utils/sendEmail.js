@@ -1,32 +1,52 @@
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+dotenv.config();
 
-// sendEmail function for localhost testing
-const sendEmail = async ({ to, subject, html }) => {
-  try {
-    // Create a test account (Ethereal)
+const createTransporter = async () => {
+  // DEVELOPMENT → Ethereal
+  if (process.env.NODE_ENV === "development") {
     const testAccount = await nodemailer.createTestAccount();
 
-    // Create transporter using Ethereal SMTP
-    const transporter = nodemailer.createTransport({
+    return nodemailer.createTransport({
       host: "smtp.ethereal.email",
       port: 587,
-      secure: false, // TLS
+      secure: false,
       auth: {
         user: testAccount.user,
         pass: testAccount.pass,
       },
     });
+  }
 
-    // Send the email
+  // PRODUCTION → Brevo
+  return nodemailer.createTransport({
+    host: process.env.BREVO_SMTP_HOST, // smtp-relay.brevo.com
+    port: process.env.BREVO_SMTP_PORT, // 587
+    secure: false,
+    auth: {
+      user: process.env.BREVO_SMTP_USER, // your Brevo email
+      pass: process.env.BREVO_SMTP_PASS, // API key as SMTP password
+    },
+  });
+};
+
+const sendEmail = async ({ to, subject, html }) => {
+  try {
+    const transporter = await createTransporter();
+
     const info = await transporter.sendMail({
-      from: `"Your App" <no-reply@example.com>`,
+      from: `"Quillpad" <${process.env.FROM_EMAIL}>`,
       to,
       subject,
       html,
     });
 
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    console.log("Message sent:", info.messageId);
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+    }
+
     return info;
   } catch (error) {
     console.error("Email sending failed:", error);
