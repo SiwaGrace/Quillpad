@@ -88,7 +88,7 @@ const VisionDetails = () => {
       {/* === MAIN DASHBOARD GRID === */}
       <div className="max-w-[1200px] mx-auto  grid grid-cols-12 gap-6 md:gap-8 py-8">
         {/* LEFT COLUMN: Sub-Visions (Milestones) */}
-        <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 order-1 ">
+        <div className="col-span-12 lg:col-span-6 xl:col-span-4 flex flex-col gap-6 order-1 ">
           <div className="bg-gradient-to-br from-primary-400/10 to-transparent p-5 rounded-2xl border border-primary-400/10">
             <p className="text-xs font-bold text-primary-400 uppercase tracking-wider mb-2">
               Description
@@ -105,7 +105,7 @@ const VisionDetails = () => {
         </div>
 
         {/* CENTER COLUMN: Journal Feed */}
-        <div className="col-span-12 lg:col-span-6 flex flex-col gap-6 order-2 lg:order-2">
+        <div className="col-span-12 lg:col-span-6 xl:col-span-5 flex flex-col gap-6 order-2 lg:order-2">
           <div className="flex items-center justify-between px-2">
             <h2 className="text-xl font-bold dark:text-white">
               Linked Journal
@@ -134,7 +134,7 @@ const VisionDetails = () => {
         </div>
 
         {/* RIGHT COLUMN: Stats & Insights */}
-        <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 order-3">
+        <div className="col-span-12  xl:col-span-3 flex flex-col gap-6 order-3">
           <div className="bg-white dark:bg-[#142d2a] p-6 rounded-2xl border border-[#e6f4f3] dark:border-[#1a3b38] shadow-sm">
             <h2 className="text-[#0d1c1b] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
               <span className="material-symbols-outlined text-primary-400">

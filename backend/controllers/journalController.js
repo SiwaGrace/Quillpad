@@ -15,7 +15,8 @@ const createJournal = asyncHandler(async (req, res) => {
     // , mood, insights
   } = req.body;
 
-  if (!title || !content) {
+  //  || !content
+  if (!title) {
     res.status(400);
     throw new Error("Please add all required fields");
   }
@@ -120,7 +121,8 @@ const updateJournal = asyncHandler(async (req, res) => {
     id,
     {
       title: title || journal.title,
-      content: content || journal.content,
+      // remove this because content is not require anymore: || journal.content
+      content: content || undefined,
       visionId: visionId !== undefined ? visionId : journal.visionId,
       updatedAt: Date.now(),
     },

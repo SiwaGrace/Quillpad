@@ -26,7 +26,8 @@ const JournalSchema = new mongoose.Schema(
     }, // e.g., "My progress this week"
     content: {
       type: String,
-      required: true,
+      // content not required to allow for quick reflections or mood tracking without detailed writing
+      required: false,
     }, // detailed reflection
     mood: {
       type: String,
@@ -35,7 +36,7 @@ const JournalSchema = new mongoose.Schema(
     insights: { type: String }, // optional key takeaways
     date: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Journal", JournalSchema);

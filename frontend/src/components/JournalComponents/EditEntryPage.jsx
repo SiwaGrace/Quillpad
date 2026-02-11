@@ -66,7 +66,7 @@ const EditEntryPage = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            required
+            // content not required anymore required
           ></textarea>
         </div>
 
