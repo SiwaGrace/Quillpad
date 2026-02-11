@@ -1,101 +1,163 @@
-🪶 Quillpad — Vision & Personal Growth App
+# 🪶 Quillpad — Vision & Personal Growth App
 
-Quillpad is a full-stack personal growth web app designed to help users clarify their vision, reflect on their journey, and track their progress over time.
-It combines journaling, goal-setting, and self-awareness tools in one beautifully designed, intuitive space.
+Quillpad is a full-stack web application that helps users clarify their vision, journal regularly, and track personal growth over time. It combines journaling, goal-setting, and simple analytics in a focused, privacy-first interface.
 
-Quillpad is built for people who want to think clearly, grow intentionally, and document their life journey.
+---
 
-🚀 Tech Stack
-Frontend
-React
-Vite
-Tailwind CSS
-Backend
-Node.js
-Express.js
-MongoDB
+**Status:** In development
 
-Other Tools
-Redux Toolkit (state management)
-JWT (authentication)
-Axios
-bcryptjs
-dotenv
+**Author:** Grace Esime Djobokou (SiwaGrace)
 
-🎯 Core Features
+---
 
-These are the main features that power Quillpad:
+**Tech stack**
 
-✍️ Journaling
-Create, view, edit, and delete personal entries.
-Each entry is automatically timestamped.
-Search and filter entries by keywords or date.
+- Frontend: React, Vite, Tailwind CSS
+- Backend: Node.js, Express
+- Database: MongoDB (Mongoose)
+- State & HTTP: Redux Toolkit, Axios
+- Auth: JWT, cookie-based session
+- Email: Brevo (Transactional emails)
 
-🎯 Vision & Growth
-Reflect on goals, ideas, and life direction.
-Use Quillpad as a digital space for clarity and planning.
-Track personal insights over time.
+## Key Features
 
-🔒 Authentication
+- Journaling: create, edit, delete, search and filter personal entries
+- Vision & sub-visions: capture long-term vision items and smaller sub-visions
+- Authentication: register/login with JWT, secure cookie storage
+- Dashboard: quick overview of recent items and quick actions
+- Email: welcome and password-reset workflows via Brevo
 
-Secure sign-up and login using JWT.
-Private, user-specific data.
+## Repository layout (short)
 
-🧭 Dashboard
+- `backend/` — Express API, controllers, models, routes
+- `frontend/` — React + Vite app, components, pages
+- `data/` — seed/static data (visions.json)
+- `README.md` — this file
 
-Overview of recent entries.
-Quick access to your reflections and ideas.
+## Prerequisites
 
-⚙️ Setup & Installation
-Clone the repository
-git clone https://github.com/yourusername/quillpad.git
-cd quillpad
+- Node.js >= 20.x (project `engines` specifies >=20)
+- Yarn (recommended) or npm
+- MongoDB instance (local or hosted)
 
-Install dependencies
+## Environment variables
+
+Create a `.env` file for the backend (`/backend/.env`) with at least:
+
+```
+PORT=4000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+BREVO_API_KEY=your_brevo_api_key
+BREVO_SENDER_EMAIL=you@yourdomain.com
+FRONTEND_URL=http://localhost:5173
+```
+
+Frontend environment (`/frontend/.env` or `Vite` env) examples:
+
+```
+VITE_API_URL=http://localhost:4000/api
+VITE_ENV=development
+```
+
+Notes:
+
+- The backend defaults to port `4000` (see `backend/index.js`). Update `VITE_API_URL` if you change backend port.
+- `FRONTEND_URL` is used when building email links (password reset, etc.).
+
+## Installation & Run (local development)
+
+From the repository root you can run both server and client concurrently (root scripts use `concurrently`):
+
+```bash
+yarn install
+yarn dev
+```
+
+Or run each part separately:
 
 Backend:
 
+```bash
 cd backend
 yarn install
-
+yarn dev    # starts nodemon (dev)
+# or yarn start for production (node index.js)
+```
 
 Frontend:
 
-cd ../frontend
+```bash
+cd frontend
 yarn install
+yarn dev    # starts Vite dev server (default 5173)
+```
 
-Environment Variables
+## Scripts
 
-Create a .env file in both /backend and /frontend:
+- Root: `yarn dev` runs server + client concurrently
+- Backend: `yarn dev` (nodemon), `yarn start` (node)
+- Frontend: `yarn dev` (vite), `yarn build`, `yarn preview`
 
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-VITE_API_URL=http://localhost:5000/api
+## API Overview
 
-Run the App
+Base path: `/api`
 
-From the root directory of the project:
-yarn install
-yarn dev
+- Auth: `/api/auth`
+  - `POST /register` — register new user
+  - `POST /login` — login (returns token, sets cookie)
+  - `POST /logout` — clear auth cookie
+  - `GET /me` — get current user (requires auth)
+  - `POST /forgot-password` — request password reset (sends email)
+  - `POST /reset-password/:token` — reset password
 
-🧪 Development Tip
+- Visions: `/api/visions` — vision and sub-vision routes
+- Journals: `/api/journals` — CRUD for journal entries
+- Quotes & Scriptures: `/api/*` (see `backend/routes` for exact endpoints)
 
-To skip authentication during development:
+For detailed request/response formats, consult the controllers in `backend/controllers/` and route files in `backend/routes/`.
 
-const isDev = import.meta.env.VITE_ENV === "development";
+## Authentication & Cookies
 
-This helps speed up testing and can be disabled in production.
+- Authentication uses JWT tokens signed with `JWT_SECRET` and is sent as an `httpOnly` cookie named `token`.
+- In development the frontend reads token from API responses; production deployments should run over HTTPS and set `secure: true` on cookies.
 
-🗺️ Roadmap (Vision Direction)
+## Emails
 
-Planned features for future versions:
-📅 Calendar & Activity Stats
-😊 Mood & Emotion Tracking
-📄 Export Entries as PDF
-🌍 Public / Private Vision Modes
-✨ Advanced UI animations & micro-interactions
-🎯 Dedicated Goals & Habits System
+- Emails are sent using Brevo (see `backend/utils/brevoEmail.js`). Provide `BREVO_API_KEY` and `BREVO_SENDER_EMAIL` in backend `.env`.
 
-🧑‍💻 Author
-SiwaGrace
-Grace Esime Djobokou -> Frontend & Full-stack Developer
+## Tests & Linting
+
+- Frontend tests use `vitest` (`yarn test` in `/frontend`).
+- ESLint is configured in the frontend (`yarn lint`).
+
+## Deployment notes
+
+- Frontend can be deployed on Vercel or Netlify; update `VITE_API_URL` to your production API base.
+- Backend can be deployed to any Node host (Heroku, Railway, Fly, DigitalOcean). Ensure you set environment variables (MONGO*URI, JWT_SECRET, BREVO*\*).
+- If deploying frontend to Vercel, add the production origin to `backend/index.js` CORS allowedOrigins or switch to a more flexible CORS policy for production.
+
+## Roadmap / TODO
+
+- Calendar & activity stats
+- Mood & emotion tracking
+- Export entries (PDF)
+- Public/private vision modes
+- Dedicated goals & habits module
+
+## Contributing
+
+- Open an issue to discuss larger changes.
+- Fork, create a feature branch, and submit a PR with tests where applicable.
+
+## License
+
+This project is licensed under MIT. See `LICENSE` if present.
+
+---
+
+If you want, I can:
+
+- add a `CONTRIBUTING.md` and `LICENSE` file,
+- generate API docs (OpenAPI) from route/controller signatures,
+- or open a PR that replaces this README with the file above. Which would you like me to do?
